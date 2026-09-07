@@ -134,18 +134,29 @@ def hardware_sinks() -> list[Sink]:
     return [s for s in list_sinks() if not s.is_eqfx]
 
 
-def find_sink(name_or_desc: str) -> Sink | None:
-    sinks = list_sinks()
-    for sink in sinks:
-        if sink.name == name_or_desc or sink.description == name_or_desc:
-            return sink
-    key = card_key(name_or_desc)
+def select_sink(sinks: list[Sink], name: str) -> Sink | None:
+    """Exact Pulse name, else the Analog node on the same card, else any match."""
+    if not name:
+        return None
+    exact = next((sink for sink in sinks if sink.name == name or sink.description == name), None)
+    if exact:
+        return exact
+    key = card_key(name)
     if not key:
         return None
-    for sink in sinks:
-        if card_key(sink.name) == key:
-            return sink
-    return None
+    same = [sink for sink in sinks if card_key(sink.name) == key]
+    analog = [
+        sink
+        for sink in same
+        if ".analog-" in sink.name or "mono-fallback" in sink.name or ".mono-" in sink.name
+    ]
+    if analog:
+        return analog[0]
+    return same[0] if same else None
+
+
+def find_sink(name_or_desc: str) -> Sink | None:
+    return select_sink(list_sinks(), name_or_desc)
 
 
 def eqfx_sink() -> Sink | None:

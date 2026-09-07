@@ -14,7 +14,9 @@ from eqfx.core.pipewire import (
     invalidate_sink_cache,
     eqfx_sink,
     move_app_streams_to_eqfx,
+    move_eqfx_playback,
     playback_destination,
+    select_sink,
     set_default_sink,
     user_selected_hardware,
 )
@@ -106,15 +108,7 @@ class Engine(QObject):
         self._apply_wanted_preset()
 
     def _match(self, name: str) -> Sink | None:
-        if not name:
-            return None
-        exact = next((d for d in self.devices if d.name == name), None)
-        if exact:
-            return exact
-        key = card_key(name)
-        if not key:
-            return None
-        return next((d for d in self.devices if card_key(d.name) == key), None)
+        return select_sink(self.devices, name)
 
     def _resolve_target(self) -> Sink | None:
         if not self.settings.follow_default_output and self.settings.output_device:
@@ -127,11 +121,11 @@ class Engine(QObject):
         picked = user_selected_hardware()
         if picked:
             return picked
-        if self.target and self._match(self.target.name):
-            return self._match(self.target.name)
         playing = self._match(playback_destination())
         if playing:
             return playing
+        if self.target and self._match(self.target.name):
+            return self._match(self.target.name)
         current = default_hardware()
         if current:
             return current
@@ -247,6 +241,10 @@ class Engine(QObject):
         if eq is None:
             return
         if eq.default:
+            if self.target:
+                dest = playback_destination()
+                if dest != self.target.name:
+                    move_eqfx_playback(self.target.name)
             return
         now = time.monotonic()
         if now - self._last_reclaim < 2.0:
