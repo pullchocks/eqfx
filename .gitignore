@@ -1,0 +1,9 @@
+.DS_Store
+*.log
+.cache
+dist
+node_modules
+.venv
+__pycache__/
+*.pyc
+.eqfx-data

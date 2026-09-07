@@ -1,0 +1,1954 @@
+[
+  {
+    "id": "flat",
+    "name": "Flat Reference",
+    "category": "Music",
+    "description": "Unity. Use this to A/B or as a clean starting point.",
+    "patches": {},
+    "output_gain": 0.0
+  },
+  {
+    "id": "harman-ish",
+    "name": "Harman Target",
+    "category": "Music",
+    "description": "Consumer headphone target: bass shelf and gentle air.",
+    "patches": {
+      "1": {
+        "frequency": 60,
+        "gain": 4.2,
+        "q": 0.7
+      },
+      "2": {
+        "frequency": 150,
+        "gain": 1.2,
+        "q": 0.9
+      },
+      "8": {
+        "frequency": 10000,
+        "gain": 2.4,
+        "q": 0.7
+      }
+    },
+    "output_gain": -1.4
+  },
+  {
+    "id": "bass-boost",
+    "name": "Bass Boost",
+    "category": "Music",
+    "description": "Broad low shelf with a slight mid dip so it stays clean.",
+    "patches": {
+      "1": {
+        "frequency": 80,
+        "gain": 6.0,
+        "q": 0.7
+      },
+      "4": {
+        "frequency": 500,
+        "gain": -1.2,
+        "q": 0.9
+      }
+    },
+    "output_gain": -1.6
+  },
+  {
+    "id": "treble-sparkle",
+    "name": "Treble Sparkle",
+    "category": "Music",
+    "description": "Open high shelf from 5 kHz for cymbals and air.",
+    "patches": {
+      "8": {
+        "frequency": 5000,
+        "gain": 3.8,
+        "q": 0.7
+      }
+    },
+    "output_gain": -0.8
+  },
+  {
+    "id": "warm-analog",
+    "name": "Warm Analog",
+    "category": "Music",
+    "description": "Weight at 200 Hz, softer top like tape/console.",
+    "patches": {
+      "1": {
+        "frequency": 90,
+        "gain": 1.8,
+        "q": 0.8
+      },
+      "2": {
+        "frequency": 200,
+        "gain": 2.0,
+        "q": 0.9
+      },
+      "8": {
+        "frequency": 10000,
+        "gain": -1.8,
+        "q": 0.7
+      }
+    },
+    "output_gain": 0.0
+  },
+  {
+    "id": "club-system",
+    "name": "Club System",
+    "category": "Music",
+    "description": "Huge 50 Hz, scooped mids, bright hats.",
+    "patches": {
+      "1": {
+        "frequency": 50,
+        "gain": 5.5,
+        "q": 0.9
+      },
+      "4": {
+        "frequency": 600,
+        "gain": -3.0,
+        "q": 1.0
+      },
+      "8": {
+        "frequency": 9000,
+        "gain": 2.5,
+        "q": 0.8
+      }
+    },
+    "output_gain": -1.5
+  },
+  {
+    "id": "loudness-night",
+    "name": "Night Loudness",
+    "category": "Music",
+    "description": "Fletcher-Munson lift so quiet playback still has bass and air.",
+    "patches": {
+      "1": {
+        "frequency": 80,
+        "gain": 3.4,
+        "q": 0.75
+      },
+      "5": {
+        "frequency": 1400,
+        "gain": -1.2,
+        "q": 0.9
+      },
+      "8": {
+        "frequency": 9000,
+        "gain": 2.2,
+        "q": 0.8
+      }
+    },
+    "output_gain": -1.0
+  },
+  {
+    "id": "streaming-curve",
+    "name": "Streaming Curve",
+    "category": "Music",
+    "description": "Translation-friendly U with a safe rumble cut.",
+    "patches": {
+      "0": {
+        "frequency": 28,
+        "q": 0.75,
+        "enabled": true
+      },
+      "1": {
+        "frequency": 70,
+        "gain": 0.8,
+        "q": 0.8
+      },
+      "4": {
+        "frequency": 600,
+        "gain": -0.6,
+        "q": 1.0
+      },
+      "8": {
+        "frequency": 12000,
+        "gain": 1.1,
+        "q": 0.75
+      }
+    },
+    "output_gain": 0.0
+  },
+  {
+    "id": "hip-hop",
+    "name": "Hip-Hop / 808",
+    "category": "Music",
+    "description": "Sub-heavy with a 1 kHz knock and crisp hats.",
+    "patches": {
+      "1": {
+        "frequency": 45,
+        "gain": 4.2,
+        "q": 0.9
+      },
+      "2": {
+        "frequency": 90,
+        "gain": 1.6,
+        "q": 1.3
+      },
+      "5": {
+        "frequency": 1100,
+        "gain": 2.2,
+        "q": 1.4
+      },
+      "8": {
+        "frequency": 10000,
+        "gain": 1.8,
+        "q": 0.8
+      }
+    },
+    "output_gain": -1.2
+  },
+  {
+    "id": "edm",
+    "name": "EDM / Electronic",
+    "category": "Music",
+    "description": "Sub, 4 kHz aggression, air for risers.",
+    "patches": {
+      "1": {
+        "frequency": 50,
+        "gain": 3.6,
+        "q": 0.9
+      },
+      "3": {
+        "frequency": 280,
+        "gain": -2.0,
+        "q": 1.2
+      },
+      "7": {
+        "frequency": 4000,
+        "gain": 2.8,
+        "q": 1.1
+      },
+      "8": {
+        "frequency": 13000,
+        "gain": 2.2,
+        "q": 0.7
+      }
+    },
+    "output_gain": -1.0
+  },
+  {
+    "id": "rock",
+    "name": "Rock Mix",
+    "category": "Music",
+    "description": "Tight bottom, 2.5 kHz attitude, cymbal air.",
+    "patches": {
+      "0": {
+        "frequency": 40,
+        "q": 0.75,
+        "enabled": true
+      },
+      "3": {
+        "frequency": 300,
+        "gain": -1.6,
+        "q": 1.1
+      },
+      "6": {
+        "frequency": 2500,
+        "gain": 2.2,
+        "q": 1.1
+      },
+      "8": {
+        "frequency": 11000,
+        "gain": 1.8,
+        "q": 0.75
+      }
+    },
+    "output_gain": -0.4
+  },
+  {
+    "id": "pop-radio",
+    "name": "Pop Radio",
+    "category": "Music",
+    "description": "Smile curve plus vocal presence.",
+    "patches": {
+      "1": {
+        "frequency": 90,
+        "gain": 1.8,
+        "q": 0.8
+      },
+      "3": {
+        "frequency": 300,
+        "gain": -1.2,
+        "q": 1.1
+      },
+      "6": {
+        "frequency": 2800,
+        "gain": 2.0,
+        "q": 1.15
+      },
+      "8": {
+        "frequency": 11000,
+        "gain": 2.2,
+        "q": 0.75
+      }
+    },
+    "output_gain": -0.6
+  },
+  {
+    "id": "jazz",
+    "name": "Jazz Club",
+    "category": "Music",
+    "description": "Warm room: 150 Hz body, polite presence, no hype.",
+    "patches": {
+      "1": {
+        "frequency": 80,
+        "gain": 1.2,
+        "q": 0.8
+      },
+      "2": {
+        "frequency": 160,
+        "gain": 1.4,
+        "q": 1.0
+      },
+      "7": {
+        "frequency": 5000,
+        "gain": 0.8,
+        "q": 1.0
+      },
+      "8": {
+        "frequency": 12000,
+        "gain": -0.8,
+        "q": 0.8
+      }
+    },
+    "output_gain": 0.0
+  },
+  {
+    "id": "classical",
+    "name": "Classical Hall",
+    "category": "Music",
+    "description": "Rumble cut, natural 2 kHz sheen, open air.",
+    "patches": {
+      "0": {
+        "frequency": 32,
+        "q": 0.75,
+        "enabled": true
+      },
+      "6": {
+        "frequency": 2500,
+        "gain": 1.0,
+        "q": 1.2
+      },
+      "8": {
+        "frequency": 14000,
+        "gain": 1.6,
+        "q": 0.7
+      }
+    },
+    "output_gain": 0.0
+  },
+  {
+    "id": "rnb",
+    "name": "R&B Smooth",
+    "category": "Music",
+    "description": "Warm 100 Hz, silky 8 kHz, polite mids.",
+    "patches": {
+      "1": {
+        "frequency": 100,
+        "gain": 2.2,
+        "q": 0.8
+      },
+      "5": {
+        "frequency": 1500,
+        "gain": -1.0,
+        "q": 1.0
+      },
+      "8": {
+        "frequency": 8000,
+        "gain": 2.4,
+        "q": 0.75
+      }
+    },
+    "output_gain": 0.0
+  },
+  {
+    "id": "lofi",
+    "name": "Lo-fi",
+    "category": "Music",
+    "description": "Vinyl bandwidth, warm mids, no sparkle.",
+    "patches": {
+      "0": {
+        "frequency": 60,
+        "q": 0.75,
+        "enabled": true
+      },
+      "2": {
+        "frequency": 180,
+        "gain": 2.0,
+        "q": 1.0
+      },
+      "9": {
+        "frequency": 7500,
+        "q": 0.75,
+        "enabled": true
+      }
+    },
+    "output_gain": 0.0
+  },
+  {
+    "id": "headphones",
+    "name": "Headphones",
+    "category": "Music",
+    "description": "Slight bass and 8\u201312 kHz silk for typical cans.",
+    "patches": {
+      "1": {
+        "frequency": 70,
+        "gain": 2.4,
+        "q": 0.75
+      },
+      "7": {
+        "frequency": 5500,
+        "gain": -0.8,
+        "q": 1.2
+      },
+      "8": {
+        "frequency": 11000,
+        "gain": 1.8,
+        "q": 0.7
+      }
+    },
+    "output_gain": -0.6
+  },
+  {
+    "id": "car",
+    "name": "Car Audio",
+    "category": "Music",
+    "description": "Road-noise loudness: bass + presence.",
+    "patches": {
+      "1": {
+        "frequency": 70,
+        "gain": 4.0,
+        "q": 0.8
+      },
+      "6": {
+        "frequency": 2500,
+        "gain": 2.0,
+        "q": 1.1
+      },
+      "8": {
+        "frequency": 10000,
+        "gain": 1.5,
+        "q": 0.8
+      }
+    },
+    "output_gain": -1.2
+  },
+  {
+    "id": "smiley",
+    "name": "Smiley",
+    "category": "Music",
+    "description": "Classic U \u2014 bass, scooped mids, air.",
+    "patches": {
+      "1": {
+        "frequency": 80,
+        "gain": 4.5,
+        "q": 0.75
+      },
+      "4": {
+        "frequency": 700,
+        "gain": -2.5,
+        "q": 0.9
+      },
+      "8": {
+        "frequency": 10000,
+        "gain": 4.0,
+        "q": 0.7
+      }
+    },
+    "output_gain": -1.5
+  },
+  {
+    "id": "de-harsh-music",
+    "name": "De-Harsh",
+    "category": "Music",
+    "description": "Tame 2.5\u20136 kHz grit on bright masters.",
+    "patches": {
+      "6": {
+        "frequency": 2800,
+        "gain": -2.2,
+        "q": 1.8
+      },
+      "7": {
+        "frequency": 5500,
+        "gain": -3.0,
+        "q": 1.6
+      }
+    },
+    "output_gain": 0.5
+  },
+  {
+    "id": "team-voice",
+    "name": "Team Voice",
+    "category": "Communication",
+    "description": "HPF, de-boom, 2.7 kHz diction. Built for in-game and Discord.",
+    "patches": {
+      "0": {
+        "frequency": 90,
+        "q": 0.8,
+        "enabled": true
+      },
+      "2": {
+        "frequency": 160,
+        "gain": -1.6,
+        "q": 1.2
+      },
+      "3": {
+        "frequency": 320,
+        "gain": -2.8,
+        "q": 1.3
+      },
+      "6": {
+        "frequency": 2700,
+        "gain": 3.2,
+        "q": 1.1
+      },
+      "8": {
+        "frequency": 9000,
+        "gain": 1.0,
+        "q": 0.8
+      }
+    },
+    "output_gain": -0.3
+  },
+  {
+    "id": "discord",
+    "name": "Discord / Overlay",
+    "category": "Communication",
+    "description": "Leave a wide 2\u20134 kHz lane so overlay chat cuts through the mix.",
+    "patches": {
+      "0": {
+        "frequency": 100,
+        "q": 0.75,
+        "enabled": true
+      },
+      "3": {
+        "frequency": 350,
+        "gain": -2.4,
+        "q": 1.2
+      },
+      "5": {
+        "frequency": 1600,
+        "gain": -1.0,
+        "q": 1.0
+      },
+      "6": {
+        "frequency": 2500,
+        "gain": 3.4,
+        "q": 1.05
+      },
+      "7": {
+        "frequency": 4000,
+        "gain": 2.0,
+        "q": 1.2
+      }
+    },
+    "output_gain": -0.4
+  },
+  {
+    "id": "in-game-voice",
+    "name": "In-Game Voice",
+    "category": "Communication",
+    "description": "Typical game VOIP: 120 Hz cut, 3 kHz cut-through, ceiling so it is not shrill.",
+    "patches": {
+      "0": {
+        "frequency": 120,
+        "q": 0.75,
+        "enabled": true
+      },
+      "3": {
+        "frequency": 400,
+        "gain": -2.0,
+        "q": 1.2
+      },
+      "6": {
+        "frequency": 3000,
+        "gain": 3.6,
+        "q": 1.0
+      },
+      "9": {
+        "frequency": 12000,
+        "q": 0.71,
+        "enabled": true
+      }
+    },
+    "output_gain": -0.3
+  },
+  {
+    "id": "male-comms",
+    "name": "Male Comms",
+    "category": "Communication",
+    "description": "Chest control at 240 Hz, diction at 2.5 kHz.",
+    "patches": {
+      "0": {
+        "frequency": 80,
+        "q": 0.75,
+        "enabled": true
+      },
+      "2": {
+        "frequency": 140,
+        "gain": 1.0,
+        "q": 1.1
+      },
+      "3": {
+        "frequency": 240,
+        "gain": -2.4,
+        "q": 1.4
+      },
+      "6": {
+        "frequency": 2500,
+        "gain": 2.8,
+        "q": 1.15
+      },
+      "8": {
+        "frequency": 10000,
+        "gain": 1.2,
+        "q": 0.8
+      }
+    },
+    "output_gain": -0.3
+  },
+  {
+    "id": "female-comms",
+    "name": "Female Comms",
+    "category": "Communication",
+    "description": "De-mud 280 Hz, presence 5 kHz, air without sizzle.",
+    "patches": {
+      "0": {
+        "frequency": 95,
+        "q": 0.75,
+        "enabled": true
+      },
+      "3": {
+        "frequency": 280,
+        "gain": -2.6,
+        "q": 1.3
+      },
+      "6": {
+        "frequency": 3200,
+        "gain": 1.6,
+        "q": 1.3
+      },
+      "7": {
+        "frequency": 5200,
+        "gain": 2.6,
+        "q": 1.15
+      },
+      "8": {
+        "frequency": 12000,
+        "gain": 1.6,
+        "q": 0.8
+      }
+    },
+    "output_gain": -0.3
+  },
+  {
+    "id": "quiet-talkers",
+    "name": "Quiet Talkers",
+    "category": "Communication",
+    "description": "Push 2\u20134 kHz and a bit of 1.2 kHz so low talkers read.",
+    "patches": {
+      "0": {
+        "frequency": 100,
+        "q": 0.75,
+        "enabled": true
+      },
+      "3": {
+        "frequency": 300,
+        "gain": -1.8,
+        "q": 1.2
+      },
+      "5": {
+        "frequency": 1200,
+        "gain": 1.8,
+        "q": 1.1
+      },
+      "6": {
+        "frequency": 2800,
+        "gain": 4.0,
+        "q": 1.05
+      },
+      "7": {
+        "frequency": 4500,
+        "gain": 2.2,
+        "q": 1.2
+      }
+    },
+    "output_gain": -0.6
+  },
+  {
+    "id": "noisy-lobby",
+    "name": "Noisy Lobby",
+    "category": "Communication",
+    "description": "Tight HPF, scoop 400\u2013800, strong 3 kHz so callouts beat the crowd.",
+    "patches": {
+      "0": {
+        "frequency": 140,
+        "q": 0.75,
+        "enabled": true
+      },
+      "3": {
+        "frequency": 400,
+        "gain": -3.2,
+        "q": 1.3
+      },
+      "4": {
+        "frequency": 700,
+        "gain": -2.0,
+        "q": 1.2
+      },
+      "6": {
+        "frequency": 3200,
+        "gain": 4.2,
+        "q": 1.1
+      }
+    },
+    "output_gain": -0.4
+  },
+  {
+    "id": "raid-call",
+    "name": "Raid / Stack Call",
+    "category": "Communication",
+    "description": "Many voices: de-box, 2 kHz intelligibility, tamed 6 kHz.",
+    "patches": {
+      "0": {
+        "frequency": 110,
+        "q": 0.75,
+        "enabled": true
+      },
+      "3": {
+        "frequency": 300,
+        "gain": -2.8,
+        "q": 1.25
+      },
+      "6": {
+        "frequency": 2000,
+        "gain": 3.0,
+        "q": 1.05
+      },
+      "7": {
+        "frequency": 6000,
+        "gain": -1.6,
+        "q": 1.3
+      }
+    },
+    "output_gain": -0.3
+  },
+  {
+    "id": "stream-talk",
+    "name": "Stream / Broadcast",
+    "category": "Communication",
+    "description": "Radio-ready: rumble cut, 3 kHz cut-through, 12 kHz ceiling.",
+    "patches": {
+      "0": {
+        "frequency": 90,
+        "q": 0.75,
+        "enabled": true
+      },
+      "3": {
+        "frequency": 400,
+        "gain": -2.0,
+        "q": 1.2
+      },
+      "6": {
+        "frequency": 3000,
+        "gain": 3.2,
+        "q": 1.0
+      },
+      "9": {
+        "frequency": 12000,
+        "q": 0.71,
+        "enabled": true
+      }
+    },
+    "output_gain": -0.3
+  },
+  {
+    "id": "podcast",
+    "name": "Podcast Voice",
+    "category": "Communication",
+    "description": "Broadcast HPF, de-boom, speech presence.",
+    "patches": {
+      "0": {
+        "frequency": 80,
+        "q": 0.8,
+        "enabled": true
+      },
+      "2": {
+        "frequency": 150,
+        "gain": -1.5,
+        "q": 1.2
+      },
+      "3": {
+        "frequency": 350,
+        "gain": -2.8,
+        "q": 1.3
+      },
+      "6": {
+        "frequency": 2700,
+        "gain": 2.6,
+        "q": 1.1
+      },
+      "8": {
+        "frequency": 9000,
+        "gain": 1.2,
+        "q": 0.8
+      }
+    },
+    "output_gain": -0.2
+  },
+  {
+    "id": "speech-intel",
+    "name": "Speech Intelligibility",
+    "category": "Communication",
+    "description": "Consonant lift at 2\u20134 kHz, low-mid cleanup.",
+    "patches": {
+      "0": {
+        "frequency": 100,
+        "q": 0.75,
+        "enabled": true
+      },
+      "3": {
+        "frequency": 300,
+        "gain": -2.4,
+        "q": 1.4
+      },
+      "6": {
+        "frequency": 2200,
+        "gain": 3.6,
+        "q": 1.15
+      },
+      "7": {
+        "frequency": 4000,
+        "gain": 1.8,
+        "q": 1.2
+      }
+    },
+    "output_gain": -0.5
+  },
+  {
+    "id": "de-ess",
+    "name": "De-Sibilance",
+    "category": "Communication",
+    "description": "Keep 3 kHz words, cut 6\u20138 kHz hiss.",
+    "patches": {
+      "0": {
+        "frequency": 90,
+        "q": 0.75,
+        "enabled": true
+      },
+      "6": {
+        "frequency": 3000,
+        "gain": 2.2,
+        "q": 1.2
+      },
+      "7": {
+        "frequency": 7000,
+        "gain": -3.8,
+        "q": 1.8
+      }
+    },
+    "output_gain": 0.0
+  },
+  {
+    "id": "proximity",
+    "name": "Close Mic / Breathing",
+    "category": "Communication",
+    "description": "HPF 140, cut 200 Hz pops, keep 4 kHz.",
+    "patches": {
+      "0": {
+        "frequency": 140,
+        "q": 0.75,
+        "enabled": true
+      },
+      "2": {
+        "frequency": 200,
+        "gain": -3.5,
+        "q": 1.5
+      },
+      "7": {
+        "frequency": 4500,
+        "gain": 2.0,
+        "q": 1.2
+      }
+    },
+    "output_gain": 0.3
+  },
+  {
+    "id": "bluetooth-call",
+    "name": "Phone / Bluetooth",
+    "category": "Communication",
+    "description": "Fill out a thin remote voice.",
+    "patches": {
+      "1": {
+        "frequency": 200,
+        "gain": 3.5,
+        "q": 0.8
+      },
+      "5": {
+        "frequency": 1200,
+        "gain": 1.5,
+        "q": 1.0
+      },
+      "8": {
+        "frequency": 8000,
+        "gain": 2.0,
+        "q": 0.8
+      }
+    },
+    "output_gain": -0.8
+  },
+  {
+    "id": "fps-competitive",
+    "name": "FPS Competitive",
+    "category": "Games",
+    "description": "Cut explosion bass, boost 2\u20134 kHz footsteps and info. The default try for ranked.",
+    "patches": {
+      "0": {
+        "frequency": 55,
+        "q": 0.75,
+        "enabled": true
+      },
+      "1": {
+        "frequency": 70,
+        "gain": -3.5,
+        "q": 0.8
+      },
+      "3": {
+        "frequency": 300,
+        "gain": -2.0,
+        "q": 1.2
+      },
+      "5": {
+        "frequency": 1800,
+        "gain": 1.6,
+        "q": 1.2
+      },
+      "6": {
+        "frequency": 3200,
+        "gain": 3.8,
+        "q": 1.05
+      },
+      "7": {
+        "frequency": 5000,
+        "gain": 2.4,
+        "q": 1.15
+      },
+      "8": {
+        "frequency": 12000,
+        "gain": 1.0,
+        "q": 0.8
+      }
+    },
+    "output_gain": 0.4
+  },
+  {
+    "id": "fps-footsteps",
+    "name": "FPS Footsteps",
+    "category": "Games",
+    "description": "200\u2013400 Hz body plus 3\u20136 kHz transients for steps, reloads, and cloth.",
+    "patches": {
+      "0": {
+        "frequency": 50,
+        "q": 0.75,
+        "enabled": true
+      },
+      "1": {
+        "frequency": 80,
+        "gain": -2.0,
+        "q": 0.8
+      },
+      "2": {
+        "frequency": 220,
+        "gain": 2.4,
+        "q": 1.3
+      },
+      "3": {
+        "frequency": 380,
+        "gain": 1.6,
+        "q": 1.4
+      },
+      "6": {
+        "frequency": 3000,
+        "gain": 3.2,
+        "q": 1.2
+      },
+      "7": {
+        "frequency": 6000,
+        "gain": 2.8,
+        "q": 1.2
+      }
+    },
+    "output_gain": 0.2
+  },
+  {
+    "id": "valorant-cs",
+    "name": "Valorant / CS",
+    "category": "Games",
+    "description": "Thin, dry, info-first. Little sub, lots of 2\u20135 kHz.",
+    "patches": {
+      "0": {
+        "frequency": 70,
+        "q": 0.75,
+        "enabled": true
+      },
+      "1": {
+        "frequency": 90,
+        "gain": -4.0,
+        "q": 0.75
+      },
+      "3": {
+        "frequency": 350,
+        "gain": -1.8,
+        "q": 1.2
+      },
+      "6": {
+        "frequency": 2800,
+        "gain": 3.6,
+        "q": 1.1
+      },
+      "7": {
+        "frequency": 4800,
+        "gain": 2.6,
+        "q": 1.15
+      },
+      "8": {
+        "frequency": 11000,
+        "gain": 0.8,
+        "q": 0.8
+      }
+    },
+    "output_gain": 0.6
+  },
+  {
+    "id": "cod-apex",
+    "name": "CoD / Apex",
+    "category": "Games",
+    "description": "Keep some gun punch, still lift footsteps and suppress rumble.",
+    "patches": {
+      "0": {
+        "frequency": 40,
+        "q": 0.75,
+        "enabled": true
+      },
+      "1": {
+        "frequency": 65,
+        "gain": -1.5,
+        "q": 0.85
+      },
+      "2": {
+        "frequency": 140,
+        "gain": 1.2,
+        "q": 1.1
+      },
+      "3": {
+        "frequency": 280,
+        "gain": -2.2,
+        "q": 1.3
+      },
+      "6": {
+        "frequency": 3500,
+        "gain": 3.0,
+        "q": 1.1
+      },
+      "7": {
+        "frequency": 5500,
+        "gain": 1.8,
+        "q": 1.2
+      }
+    },
+    "output_gain": 0.0
+  },
+  {
+    "id": "battle-royale",
+    "name": "Battle Royale",
+    "category": "Games",
+    "description": "Long-range info: 4 kHz lift, less 80 Hz thump so you hear rotos and steps.",
+    "patches": {
+      "0": {
+        "frequency": 45,
+        "q": 0.75,
+        "enabled": true
+      },
+      "1": {
+        "frequency": 80,
+        "gain": -2.8,
+        "q": 0.8
+      },
+      "4": {
+        "frequency": 700,
+        "gain": -1.0,
+        "q": 1.0
+      },
+      "6": {
+        "frequency": 2500,
+        "gain": 2.2,
+        "q": 1.15
+      },
+      "7": {
+        "frequency": 4500,
+        "gain": 3.2,
+        "q": 1.1
+      },
+      "8": {
+        "frequency": 10000,
+        "gain": 1.4,
+        "q": 0.75
+      }
+    },
+    "output_gain": 0.3
+  },
+  {
+    "id": "warzone",
+    "name": "Warzone / Big Map",
+    "category": "Games",
+    "description": "Vehicles and nades down, footsteps and UAV-style detail up.",
+    "patches": {
+      "0": {
+        "frequency": 50,
+        "q": 0.75,
+        "enabled": true
+      },
+      "1": {
+        "frequency": 55,
+        "gain": -4.0,
+        "q": 0.85
+      },
+      "2": {
+        "frequency": 120,
+        "gain": -1.5,
+        "q": 1.1
+      },
+      "6": {
+        "frequency": 3000,
+        "gain": 3.4,
+        "q": 1.1
+      },
+      "7": {
+        "frequency": 6500,
+        "gain": 2.2,
+        "q": 1.2
+      }
+    },
+    "output_gain": 0.5
+  },
+  {
+    "id": "explosions-down",
+    "name": "Explosions Down",
+    "category": "Games",
+    "description": "Park the LFE and 100 Hz bloom so you are not deaf after every nade.",
+    "patches": {
+      "0": {
+        "frequency": 40,
+        "q": 0.75,
+        "enabled": true
+      },
+      "1": {
+        "frequency": 70,
+        "gain": -5.5,
+        "q": 0.7
+      },
+      "2": {
+        "frequency": 110,
+        "gain": -3.0,
+        "q": 1.2
+      },
+      "7": {
+        "frequency": 5000,
+        "gain": -1.2,
+        "q": 1.3
+      }
+    },
+    "output_gain": 1.2
+  },
+  {
+    "id": "night-ops",
+    "name": "Night Ops",
+    "category": "Games",
+    "description": "Quiet maps: lift 2\u20138 kHz cues, keep a little sub for atmosphere.",
+    "patches": {
+      "1": {
+        "frequency": 80,
+        "gain": -1.0,
+        "q": 0.8
+      },
+      "5": {
+        "frequency": 1500,
+        "gain": 1.4,
+        "q": 1.1
+      },
+      "6": {
+        "frequency": 2800,
+        "gain": 2.8,
+        "q": 1.15
+      },
+      "7": {
+        "frequency": 7000,
+        "gain": 2.4,
+        "q": 1.1
+      },
+      "8": {
+        "frequency": 12000,
+        "gain": 1.6,
+        "q": 0.7
+      }
+    },
+    "output_gain": 0.0
+  },
+  {
+    "id": "tactical",
+    "name": "Tactical / Slow Push",
+    "category": "Games",
+    "description": "Footstep body at 250 Hz, whisper-range 4 kHz, controlled bass.",
+    "patches": {
+      "0": {
+        "frequency": 50,
+        "q": 0.75,
+        "enabled": true
+      },
+      "1": {
+        "frequency": 75,
+        "gain": -2.4,
+        "q": 0.8
+      },
+      "3": {
+        "frequency": 250,
+        "gain": 2.0,
+        "q": 1.35
+      },
+      "7": {
+        "frequency": 4200,
+        "gain": 3.4,
+        "q": 1.15
+      }
+    },
+    "output_gain": 0.0
+  },
+  {
+    "id": "horror",
+    "name": "Horror / Stealth",
+    "category": "Games",
+    "description": "Creaks and breaths: 3\u20138 kHz, less mud, enough low end for stingers.",
+    "patches": {
+      "0": {
+        "frequency": 35,
+        "q": 0.75,
+        "enabled": true
+      },
+      "3": {
+        "frequency": 400,
+        "gain": -2.0,
+        "q": 1.1
+      },
+      "6": {
+        "frequency": 3200,
+        "gain": 2.6,
+        "q": 1.2
+      },
+      "7": {
+        "frequency": 7500,
+        "gain": 2.8,
+        "q": 1.1
+      },
+      "8": {
+        "frequency": 12000,
+        "gain": 1.2,
+        "q": 0.75
+      }
+    },
+    "output_gain": 0.0
+  },
+  {
+    "id": "open-world",
+    "name": "Open World / MMO",
+    "category": "Games",
+    "description": "Keep music and ambience; a little presence so UI and VO read.",
+    "patches": {
+      "0": {
+        "frequency": 32,
+        "q": 0.75,
+        "enabled": true
+      },
+      "1": {
+        "frequency": 70,
+        "gain": 1.2,
+        "q": 0.8
+      },
+      "3": {
+        "frequency": 300,
+        "gain": -1.0,
+        "q": 1.1
+      },
+      "6": {
+        "frequency": 2500,
+        "gain": 1.6,
+        "q": 1.1
+      },
+      "8": {
+        "frequency": 12000,
+        "gain": 1.4,
+        "q": 0.75
+      }
+    },
+    "output_gain": -0.3
+  },
+  {
+    "id": "cinematic-sp",
+    "name": "Cinematic Single-Player",
+    "category": "Games",
+    "description": "Keep LFE and score. Soft 3 kHz so cutscenes are not harsh.",
+    "patches": {
+      "1": {
+        "frequency": 55,
+        "gain": 2.4,
+        "q": 0.8
+      },
+      "6": {
+        "frequency": 3000,
+        "gain": -1.4,
+        "q": 1.2
+      },
+      "8": {
+        "frequency": 10000,
+        "gain": 1.2,
+        "q": 0.75
+      }
+    },
+    "output_gain": -0.5
+  },
+  {
+    "id": "immersive-bass",
+    "name": "Immersive Bass",
+    "category": "Games",
+    "description": "Single-player thump: 50\u201380 Hz up, 300 Hz cleaned.",
+    "patches": {
+      "1": {
+        "frequency": 55,
+        "gain": 4.0,
+        "q": 0.85
+      },
+      "3": {
+        "frequency": 300,
+        "gain": -2.4,
+        "q": 1.3
+      },
+      "8": {
+        "frequency": 11000,
+        "gain": 1.0,
+        "q": 0.8
+      }
+    },
+    "output_gain": -1.0
+  },
+  {
+    "id": "racing",
+    "name": "Racing",
+    "category": "Games",
+    "description": "Engine body 120\u2013200 Hz, tame 4 kHz exhaust harshness.",
+    "patches": {
+      "0": {
+        "frequency": 35,
+        "q": 0.75,
+        "enabled": true
+      },
+      "2": {
+        "frequency": 160,
+        "gain": 2.2,
+        "q": 1.1
+      },
+      "7": {
+        "frequency": 4000,
+        "gain": -2.4,
+        "q": 1.3
+      },
+      "8": {
+        "frequency": 12000,
+        "gain": 1.0,
+        "q": 0.8
+      }
+    },
+    "output_gain": 0.0
+  },
+  {
+    "id": "flight-sim",
+    "name": "Flight Sim",
+    "category": "Games",
+    "description": "Rumble cut, radio-ish 2 kHz, less cabin roar at 200 Hz.",
+    "patches": {
+      "0": {
+        "frequency": 45,
+        "q": 0.75,
+        "enabled": true
+      },
+      "2": {
+        "frequency": 200,
+        "gain": -2.8,
+        "q": 1.2
+      },
+      "6": {
+        "frequency": 2200,
+        "gain": 2.4,
+        "q": 1.1
+      },
+      "9": {
+        "frequency": 14000,
+        "q": 0.71,
+        "enabled": true
+      }
+    },
+    "output_gain": 0.0
+  },
+  {
+    "id": "fighting",
+    "name": "Fighting Game",
+    "category": "Games",
+    "description": "Hit confirms at 2\u20135 kHz, keep some bass for impacts.",
+    "patches": {
+      "1": {
+        "frequency": 80,
+        "gain": 1.6,
+        "q": 0.85
+      },
+      "3": {
+        "frequency": 350,
+        "gain": -1.2,
+        "q": 1.1
+      },
+      "6": {
+        "frequency": 2500,
+        "gain": 2.4,
+        "q": 1.15
+      },
+      "7": {
+        "frequency": 5000,
+        "gain": 2.8,
+        "q": 1.1
+      }
+    },
+    "output_gain": -0.4
+  },
+  {
+    "id": "sports",
+    "name": "Sports",
+    "category": "Games",
+    "description": "Crowd down a bit, commentary/PA lane at 2\u20134 kHz.",
+    "patches": {
+      "2": {
+        "frequency": 180,
+        "gain": -1.4,
+        "q": 1.0
+      },
+      "4": {
+        "frequency": 600,
+        "gain": -1.6,
+        "q": 1.0
+      },
+      "6": {
+        "frequency": 2800,
+        "gain": 2.8,
+        "q": 1.1
+      }
+    },
+    "output_gain": 0.0
+  },
+  {
+    "id": "retro",
+    "name": "Retro / Arcade",
+    "category": "Games",
+    "description": "Small-speaker character: no sub, mid forward.",
+    "patches": {
+      "0": {
+        "frequency": 120,
+        "q": 0.75,
+        "enabled": true
+      },
+      "5": {
+        "frequency": 1400,
+        "gain": 2.2,
+        "q": 0.9
+      },
+      "9": {
+        "frequency": 11000,
+        "q": 0.71,
+        "enabled": true
+      }
+    },
+    "output_gain": 0.6
+  },
+  {
+    "id": "headset-fps",
+    "name": "Headset FPS",
+    "category": "Games",
+    "description": "Typical gaming headset: less 80 Hz bloom, more 3 kHz and 8 kHz.",
+    "patches": {
+      "1": {
+        "frequency": 80,
+        "gain": -2.8,
+        "q": 0.75
+      },
+      "3": {
+        "frequency": 250,
+        "gain": -1.6,
+        "q": 1.2
+      },
+      "6": {
+        "frequency": 3000,
+        "gain": 3.4,
+        "q": 1.1
+      },
+      "8": {
+        "frequency": 8000,
+        "gain": 2.0,
+        "q": 0.75
+      }
+    },
+    "output_gain": 0.3
+  },
+  {
+    "id": "competitive-thin",
+    "name": "Competitive Thin",
+    "category": "Games",
+    "description": "Aggressive rumble cut and mid scoop for maximum positional cues.",
+    "patches": {
+      "0": {
+        "frequency": 80,
+        "q": 0.75,
+        "enabled": true
+      },
+      "1": {
+        "frequency": 100,
+        "gain": -3.5,
+        "q": 0.7
+      },
+      "4": {
+        "frequency": 600,
+        "gain": -3.0,
+        "q": 0.9
+      },
+      "6": {
+        "frequency": 3500,
+        "gain": 4.2,
+        "q": 1.05
+      },
+      "7": {
+        "frequency": 6000,
+        "gain": 2.0,
+        "q": 1.2
+      }
+    },
+    "output_gain": 0.8
+  },
+  {
+    "id": "game-plus-voice",
+    "name": "Game + Team Voice",
+    "category": "Hybrid",
+    "description": "Footstep 3 kHz and a reserved 2\u20134 kHz lane so teammates stay on top of the mix.",
+    "patches": {
+      "0": {
+        "frequency": 55,
+        "q": 0.75,
+        "enabled": true
+      },
+      "1": {
+        "frequency": 70,
+        "gain": -2.2,
+        "q": 0.8
+      },
+      "3": {
+        "frequency": 300,
+        "gain": -2.2,
+        "q": 1.25
+      },
+      "5": {
+        "frequency": 1500,
+        "gain": -0.8,
+        "q": 1.0
+      },
+      "6": {
+        "frequency": 2800,
+        "gain": 3.6,
+        "q": 1.05
+      },
+      "7": {
+        "frequency": 4500,
+        "gain": 2.2,
+        "q": 1.15
+      },
+      "8": {
+        "frequency": 11000,
+        "gain": 1.0,
+        "q": 0.8
+      }
+    },
+    "output_gain": 0.2
+  },
+  {
+    "id": "ranked-plus-comms",
+    "name": "Ranked + Comms",
+    "category": "Hybrid",
+    "description": "Valorant-thin game EQ with extra 2.5 kHz for Discord/in-game voice.",
+    "patches": {
+      "0": {
+        "frequency": 70,
+        "q": 0.75,
+        "enabled": true
+      },
+      "1": {
+        "frequency": 85,
+        "gain": -3.6,
+        "q": 0.75
+      },
+      "3": {
+        "frequency": 340,
+        "gain": -2.0,
+        "q": 1.2
+      },
+      "6": {
+        "frequency": 2500,
+        "gain": 4.0,
+        "q": 1.05
+      },
+      "7": {
+        "frequency": 5000,
+        "gain": 2.4,
+        "q": 1.15
+      }
+    },
+    "output_gain": 0.5
+  },
+  {
+    "id": "music-plus-discord",
+    "name": "Music + Discord",
+    "category": "Hybrid",
+    "description": "Keep a music smile, duck 400 Hz mud, lift 3 kHz so chat sits above the track.",
+    "patches": {
+      "1": {
+        "frequency": 70,
+        "gain": 2.0,
+        "q": 0.8
+      },
+      "3": {
+        "frequency": 400,
+        "gain": -2.4,
+        "q": 1.2
+      },
+      "6": {
+        "frequency": 3000,
+        "gain": 3.0,
+        "q": 1.1
+      },
+      "8": {
+        "frequency": 11000,
+        "gain": 1.6,
+        "q": 0.75
+      }
+    },
+    "output_gain": -0.5
+  },
+  {
+    "id": "stream-monitor",
+    "name": "Stream Monitor",
+    "category": "Hybrid",
+    "description": "Game + chat + music: rumble cut, voice lane, silk without ear fatigue.",
+    "patches": {
+      "0": {
+        "frequency": 40,
+        "q": 0.75,
+        "enabled": true
+      },
+      "1": {
+        "frequency": 80,
+        "gain": -1.2,
+        "q": 0.8
+      },
+      "3": {
+        "frequency": 320,
+        "gain": -1.8,
+        "q": 1.2
+      },
+      "6": {
+        "frequency": 2700,
+        "gain": 2.8,
+        "q": 1.1
+      },
+      "7": {
+        "frequency": 6000,
+        "gain": -1.0,
+        "q": 1.4
+      },
+      "8": {
+        "frequency": 12000,
+        "gain": 1.2,
+        "q": 0.75
+      }
+    },
+    "output_gain": 0.0
+  },
+  {
+    "id": "cinematic-plus-vo",
+    "name": "Cinematic + Dialogue",
+    "category": "Hybrid",
+    "description": "Keep score and LFE, carve 2\u20134 kHz so story VO and party chat read.",
+    "patches": {
+      "1": {
+        "frequency": 60,
+        "gain": 1.8,
+        "q": 0.8
+      },
+      "3": {
+        "frequency": 280,
+        "gain": -1.4,
+        "q": 1.1
+      },
+      "6": {
+        "frequency": 3000,
+        "gain": 2.6,
+        "q": 1.1
+      },
+      "8": {
+        "frequency": 12000,
+        "gain": 1.0,
+        "q": 0.75
+      }
+    },
+    "output_gain": -0.4
+  },
+  {
+    "id": "night-plus-comms",
+    "name": "Night Game + Comms",
+    "category": "Hybrid",
+    "description": "Low-volume loudness plus a speech bump for late sessions.",
+    "patches": {
+      "1": {
+        "frequency": 75,
+        "gain": 1.6,
+        "q": 0.75
+      },
+      "5": {
+        "frequency": 1400,
+        "gain": -1.0,
+        "q": 0.9
+      },
+      "6": {
+        "frequency": 2800,
+        "gain": 3.4,
+        "q": 1.05
+      },
+      "8": {
+        "frequency": 8500,
+        "gain": 1.8,
+        "q": 0.8
+      }
+    },
+    "output_gain": -0.6
+  },
+  {
+    "id": "party-hybrid",
+    "name": "Party Game",
+    "category": "Hybrid",
+    "description": "Fun bass for the lobby, 3 kHz so callouts still land.",
+    "patches": {
+      "1": {
+        "frequency": 65,
+        "gain": 3.4,
+        "q": 0.8
+      },
+      "3": {
+        "frequency": 300,
+        "gain": -1.8,
+        "q": 1.2
+      },
+      "6": {
+        "frequency": 3000,
+        "gain": 2.8,
+        "q": 1.1
+      },
+      "8": {
+        "frequency": 10000,
+        "gain": 1.6,
+        "q": 0.75
+      }
+    },
+    "output_gain": -0.8
+  },
+  {
+    "id": "movie-plus-chat",
+    "name": "Movie + Voice Chat",
+    "category": "Hybrid",
+    "description": "Home-theater bass, dialogue 3 kHz, Discord still audible.",
+    "patches": {
+      "1": {
+        "frequency": 50,
+        "gain": 2.8,
+        "q": 0.8
+      },
+      "3": {
+        "frequency": 250,
+        "gain": -1.2,
+        "q": 1.1
+      },
+      "6": {
+        "frequency": 3200,
+        "gain": 2.4,
+        "q": 1.1
+      },
+      "8": {
+        "frequency": 10000,
+        "gain": 1.2,
+        "q": 0.75
+      }
+    },
+    "output_gain": -0.6
+  },
+  {
+    "id": "mmo-plus-raid",
+    "name": "MMO + Raid Call",
+    "category": "Hybrid",
+    "description": "Ambience intact, 2 kHz raid-call lane, less 6 kHz clash.",
+    "patches": {
+      "0": {
+        "frequency": 35,
+        "q": 0.75,
+        "enabled": true
+      },
+      "1": {
+        "frequency": 80,
+        "gain": 1.0,
+        "q": 0.8
+      },
+      "3": {
+        "frequency": 350,
+        "gain": -1.6,
+        "q": 1.15
+      },
+      "6": {
+        "frequency": 2100,
+        "gain": 3.2,
+        "q": 1.05
+      },
+      "7": {
+        "frequency": 6200,
+        "gain": -1.4,
+        "q": 1.3
+      }
+    },
+    "output_gain": -0.2
+  },
+  {
+    "id": "br-plus-squad",
+    "name": "BR + Squad",
+    "category": "Hybrid",
+    "description": "Battle-royale info EQ with extra 2.7 kHz for squad VOIP.",
+    "patches": {
+      "0": {
+        "frequency": 48,
+        "q": 0.75,
+        "enabled": true
+      },
+      "1": {
+        "frequency": 75,
+        "gain": -2.6,
+        "q": 0.8
+      },
+      "6": {
+        "frequency": 2700,
+        "gain": 3.8,
+        "q": 1.05
+      },
+      "7": {
+        "frequency": 4800,
+        "gain": 2.4,
+        "q": 1.15
+      },
+      "8": {
+        "frequency": 10000,
+        "gain": 1.2,
+        "q": 0.75
+      }
+    },
+    "output_gain": 0.3
+  },
+  {
+    "id": "sim-plus-atc",
+    "name": "Sim + ATC",
+    "category": "Hybrid",
+    "description": "Cabin roar down, radio-voice 2 kHz up.",
+    "patches": {
+      "0": {
+        "frequency": 50,
+        "q": 0.75,
+        "enabled": true
+      },
+      "2": {
+        "frequency": 180,
+        "gain": -3.0,
+        "q": 1.15
+      },
+      "6": {
+        "frequency": 2000,
+        "gain": 3.4,
+        "q": 1.1
+      },
+      "9": {
+        "frequency": 13000,
+        "q": 0.71,
+        "enabled": true
+      }
+    },
+    "output_gain": 0.0
+  },
+  {
+    "id": "low-volume-hybrid",
+    "name": "Low Volume Hybrid",
+    "category": "Hybrid",
+    "description": "Quiet-night contour plus speech so game and chat both survive low master volume.",
+    "patches": {
+      "1": {
+        "frequency": 80,
+        "gain": 2.8,
+        "q": 0.75
+      },
+      "3": {
+        "frequency": 350,
+        "gain": -1.4,
+        "q": 1.1
+      },
+      "6": {
+        "frequency": 2600,
+        "gain": 3.2,
+        "q": 1.05
+      },
+      "8": {
+        "frequency": 9000,
+        "gain": 2.0,
+        "q": 0.8
+      }
+    },
+    "output_gain": -0.8
+  },
+  {
+    "id": "headset-hybrid",
+    "name": "Headset Hybrid",
+    "category": "Hybrid",
+    "description": "Gaming headset: less bloom, footsteps + teammates in the same 3 kHz window.",
+    "patches": {
+      "1": {
+        "frequency": 85,
+        "gain": -2.2,
+        "q": 0.75
+      },
+      "3": {
+        "frequency": 280,
+        "gain": -1.8,
+        "q": 1.2
+      },
+      "6": {
+        "frequency": 3000,
+        "gain": 3.6,
+        "q": 1.05
+      },
+      "8": {
+        "frequency": 8500,
+        "gain": 1.6,
+        "q": 0.75
+      }
+    },
+    "output_gain": 0.2
+  }
+]

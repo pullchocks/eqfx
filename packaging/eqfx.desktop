@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=eqFX
+Comment=System-wide 10-band equalizer for games and music
+Exec=/home/owner/Desktop/Projects/eqfx/packaging/eqfx
+Path=/home/owner/Desktop/Projects/eqfx
+Icon=eqfx
+Terminal=false
+Categories=AudioVideo;Audio;
+StartupNotify=false
+StartupWMClass=eqfx

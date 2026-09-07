@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EQFX — Studio Parametric</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2307080b'/%3E%3Cpath d='M4 20 Q8 20 10 14 T16 16 T22 10 T28 12' fill='none' stroke='%233ee0c6' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@320;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="grain" aria-hidden="true"></div>
+    <div id="app" class="app">
+      <header class="topbar">
+        <div class="brand">
+          <svg class="brand-mark" viewBox="0 0 28 28" aria-hidden="true">
+            <rect x="1" y="1" width="26" height="26" rx="6" fill="none" stroke="currentColor" stroke-width="1.4" />
+            <path
+              d="M5 18 C8 18 9 10 12 12 C15 14 16 8 19 9 C22 10 23 13 24 13"
+              fill="none"
+              stroke="var(--accent)"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+          <div class="brand-copy">
+            <div class="brand-name">EQFX</div>
+            <div class="brand-sub">10-BAND PARAMETRIC</div>
+          </div>
+        </div>
+
+        <div class="preset-head">
+          <label class="sr-only" for="preset-search-top">Preset</label>
+          <button id="preset-open" class="preset-current" type="button" title="Browse presets">
+            <span class="preset-kicker" id="preset-category">Init</span>
+            <span class="preset-title" id="preset-name">Flat Reference</span>
+            <span class="preset-dirty" id="preset-dirty" hidden>· edited</span>
+            <svg class="chev" viewBox="0 0 12 8" aria-hidden="true">
+              <path d="M1 1.5 L6 6.5 L11 1.5" fill="none" stroke="currentColor" stroke-width="1.5" />
+            </svg>
+          </button>
+          <button id="btn-init" class="ghost" type="button" title="Reset to flat">Init</button>
+        </div>
+
+        <div class="top-actions">
+          <div class="ab" role="group" aria-label="A/B compare">
+            <button id="btn-a" class="ab-btn is-on" type="button">A</button>
+            <button id="btn-b" class="ab-btn" type="button">B</button>
+            <button id="btn-copy-ab" class="ghost tight" type="button" title="Copy active slot to the other">Copy</button>
+          </div>
+          <button id="btn-bypass" class="bypass" type="button" aria-pressed="false">Bypass</button>
+          <div class="trim">
+            <span class="trim-label">OUT</span>
+            <input id="out-gain" type="range" min="-18" max="18" step="0.1" value="0" />
+            <span id="out-gain-val" class="mono">0.0 dB</span>
+          </div>
+        </div>
+      </header>
+
+      <aside class="sidebar">
+        <div class="side-search">
+          <input id="preset-search" type="search" placeholder="Search factory presets" autocomplete="off" />
+        </div>
+        <div id="preset-cats" class="cats"></div>
+        <div id="preset-list" class="preset-list" role="listbox" aria-label="Factory presets"></div>
+      </aside>
+
+      <main class="stage">
+        <div class="analyzer-well">
+          <canvas id="eq-canvas"></canvas>
+          <div class="analyzer-hud">
+            <div class="hud-left">
+              <label class="check">
+                <input id="toggle-analyzer" type="checkbox" checked />
+                Analyzer
+              </label>
+              <label class="check">
+                <input id="toggle-pre" type="checkbox" checked />
+                Pre
+              </label>
+              <div class="seg" role="group" aria-label="Display range">
+                <button data-range="12" type="button">±12</button>
+                <button data-range="18" class="is-on" type="button">±18</button>
+                <button data-range="24" type="button">±24</button>
+              </div>
+            </div>
+            <div class="hud-readout">
+              <span id="hover-readout" class="mono">20 Hz  ·  0.0 dB</span>
+            </div>
+          </div>
+          <div class="drop-hint" id="drop-hint">Drop an audio file to audition through the EQ</div>
+        </div>
+
+        <section class="inspector">
+          <div class="band-strip" id="band-strip"></div>
+          <div class="inspector-main">
+            <div class="type-row" id="type-row"></div>
+            <div class="knobs" id="knobs"></div>
+            <div class="inspector-meta">
+              <div class="meta-block">
+                <div class="meta-kicker">Selected</div>
+                <div id="sel-name" class="meta-value">Band 6</div>
+              </div>
+              <div class="meta-block">
+                <div class="meta-kicker">Type</div>
+                <div id="sel-type" class="meta-value">Peaking</div>
+              </div>
+              <div class="meta-actions">
+                <button id="btn-solo" class="ghost" type="button">Solo</button>
+                <button id="btn-enable" class="ghost" type="button">On</button>
+                <button id="btn-reset-band" class="ghost" type="button">Reset</button>
+              </div>
+            </div>
+          </div>
+          <div class="meters" aria-label="Output meters">
+            <canvas id="meter-canvas"></canvas>
+            <div class="meter-labels">
+              <span>L</span>
+              <span>R</span>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="transport">
+        <input id="file-input" type="file" accept="audio/*,.wav,.mp3,.flac,.ogg,.m4a,.aiff" hidden />
+        <button id="btn-load" class="ghost" type="button">Load audio</button>
+        <button id="btn-play" class="play" type="button" title="Play / pause">Play</button>
+        <button id="btn-stop" class="ghost" type="button">Stop</button>
+        <div class="scrub">
+          <div class="scrub-meta">
+            <span id="time-now" class="mono">0:00.0</span>
+            <span id="track-name" class="track-name">No source · load a file, use Demo Mix, or noise</span>
+            <span id="time-end" class="mono">0:00.0</span>
+          </div>
+          <input id="seek" type="range" min="0" max="1000" value="0" />
+        </div>
+        <div class="sources" role="group" aria-label="Test sources">
+          <button id="btn-demo" class="ghost" type="button">Demo Mix</button>
+          <button id="btn-pink" class="ghost" type="button">Pink</button>
+          <button id="btn-white" class="ghost" type="button">White</button>
+          <button id="btn-sine" class="ghost" type="button">Sine</button>
+          <button id="btn-mic" class="ghost" type="button">Mic</button>
+        </div>
+      </footer>
+    </div>
+
+    <div id="toast" class="toast" hidden></div>
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>
