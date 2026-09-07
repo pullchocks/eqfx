@@ -6,6 +6,29 @@ eqFX is playback only. It does not touch your microphone.
 
 It is a Linux app. It is not tied to Pop!_OS. Any distro with PipeWire (Ubuntu, Fedora, Arch, Debian, and the rest) should work. It will not run on Windows, macOS, or a PulseAudio-only machine.
 
+## Install
+
+From the project root:
+
+```bash
+python3 setup.py
+```
+
+That is the first-run installer (not setuptools — package metadata is in `pyproject.toml`). It:
+
+- checks for Python 3.10+, PipeWire, `wpctl`, and `pactl`
+- installs PySide6 into `.venv`
+- writes the app-menu launcher and icon for **this checkout**
+- enables login autostart (tray)
+
+Then open **eqFX** from the app menu. After login it starts hidden in the tray. A second launch raises the existing window. Closing the window keeps the EQ running; quit from the tray to remove it from the PipeWire graph.
+
+Skip autostart if you only want the menu entry:
+
+```bash
+python3 setup.py --no-autostart
+```
+
 ## Run
 
 ```bash
@@ -18,13 +41,7 @@ Stay in the tray (EQ keeps running with no window):
 python3 run.py --tray
 ```
 
-Needs Python 3.10+, PipeWire (`pipewire`, `wpctl`, `pactl`), and PySide6. If PySide6 is not installed globally, eqFX also looks at `./.venv` and `../popstream/.venv`.
-
-### Without a terminal
-
-Copy `packaging/eqfx.desktop` to `~/.local/share/applications/` (point `Exec`, `Path`, and `Icon` at this repo). Then open **eqFX** from the app menu.
-
-A second launch raises the existing window. Quit from the tray when you want the insert removed.
+If PySide6 is not in `.venv`, eqFX also looks at `../popstream/.venv`.
 
 ## What it does
 

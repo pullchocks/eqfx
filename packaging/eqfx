@@ -2,4 +2,7 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "$(readlink -f "$0")")/.." && pwd)"
 cd "$ROOT"
+if [[ -x "$ROOT/.venv/bin/python" ]] && "$ROOT/.venv/bin/python" -c "import PySide6" >/dev/null 2>&1; then
+  exec -a eqfx "$ROOT/.venv/bin/python" "$ROOT/run.py" "$@"
+fi
 exec -a eqfx python3 "$ROOT/run.py" "$@"

@@ -2,11 +2,14 @@
 Type=Application
 Version=1.0
 Name=eqFX
-Comment=System-wide 10-band equalizer for games and music
-Exec=@ROOT@/packaging/eqfx
+Comment=System-wide 10-band equalizer
+Exec=@ROOT@/packaging/eqfx --tray
 Path=@ROOT@
 Icon=@ICON@
 Terminal=false
 Categories=AudioVideo;Audio;
 StartupNotify=false
 StartupWMClass=eqfx
+X-GNOME-Autostart-enabled=true
+X-GNOME-Autostart-Delay=2
+Hidden=false
