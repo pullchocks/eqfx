@@ -19,6 +19,13 @@ PLAYBACK_NAMES = {PLAYBACK_NAME, "minieq.playback"}
 ITEM_RE = re.compile(
     r"^(?P<star>\*)?\s*(?P<id>\d+)\.\s+(?P<name>.+?)(?:\s+\[(?P<tag>[^\]]*)\])?\s*$"
 )
+ENDPOINT_TAIL = re.compile(
+    r"\.(?:analog-[^.]+|pro-(?:output|input)-\d+|hdmi-stereo(?:-\d+)?|iec958-stereo)$"
+)
+
+
+def card_key(name: str) -> str:
+    return ENDPOINT_TAIL.sub("", name) if name else ""
 
 
 @dataclass
@@ -38,8 +45,22 @@ class Sink:
         )
 
 
-def run(argv: list[str], timeout: float = 6.0) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(argv, capture_output=True, text=True, timeout=timeout)
+_SINK_CACHE_TTL = 0.8
+_sink_cache: tuple[float, list[Sink]] | None = None
+
+
+def run(argv: list[str], timeout: float = 2.0) -> subprocess.CompletedProcess[str]:
+    try:
+        return subprocess.run(argv, capture_output=True, text=True, timeout=timeout)
+    except subprocess.TimeoutExpired:
+        return subprocess.CompletedProcess(argv, 124, "", "timed out")
+    except OSError as exc:
+        return subprocess.CompletedProcess(argv, 1, "", str(exc))
+
+
+def invalidate_sink_cache() -> None:
+    global _sink_cache
+    _sink_cache = None
 
 
 def _parse_section(text: str, want: str) -> list[tuple[int, str, bool, str]]:
@@ -70,9 +91,15 @@ def _parse_section(text: str, want: str) -> list[tuple[int, str, bool, str]]:
     return rows
 
 
-def list_sinks() -> list[Sink]:
-    named = _parse_section(run(["wpctl", "status", "--name"]).stdout, "Sinks")
-    pretty = _parse_section(run(["wpctl", "status"]).stdout, "Sinks")
+def list_sinks(*, force: bool = False) -> list[Sink]:
+    global _sink_cache
+    now = time.monotonic()
+    if not force and _sink_cache is not None and now - _sink_cache[0] < _SINK_CACHE_TTL:
+        return _sink_cache[1]
+    named_text = run(["wpctl", "status", "--name"]).stdout
+    pretty_text = run(["wpctl", "status"]).stdout
+    named = _parse_section(named_text, "Sinks")
+    pretty = _parse_section(pretty_text, "Sinks")
     pretty_map = {item[0]: item[1] for item in pretty}
     default_map = {item[0]: item[2] for item in pretty}
     sinks = []
@@ -86,7 +113,7 @@ def list_sinks() -> list[Sink]:
             )
         )
     # Filter-chain graphs show up under Filters, not Sinks.
-    for node_id, name, default, tag in _parse_section(run(["wpctl", "status", "--name"]).stdout, "Filters"):
+    for node_id, name, default, _tag in _parse_section(named_text, "Filters"):
         if name not in LEGACY_SINK_NAMES:
             continue
         if any(s.node_id == node_id for s in sinks):
@@ -99,6 +126,7 @@ def list_sinks() -> list[Sink]:
                 default=default,
             )
         )
+    _sink_cache = (now, sinks)
     return sinks
 
 
@@ -110,6 +138,12 @@ def find_sink(name_or_desc: str) -> Sink | None:
     sinks = list_sinks()
     for sink in sinks:
         if sink.name == name_or_desc or sink.description == name_or_desc:
+            return sink
+    key = card_key(name_or_desc)
+    if not key:
+        return None
+    for sink in sinks:
+        if card_key(sink.name) == key:
             return sink
     return None
 
@@ -132,6 +166,7 @@ def default_hardware() -> Sink | None:
 
 def set_default_sink(node_id: int) -> None:
     run(["wpctl", "set-default", str(node_id)])
+    invalidate_sink_cache()
 
 
 def user_selected_hardware() -> Sink | None:

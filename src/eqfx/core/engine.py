@@ -1,13 +1,17 @@
 from __future__ import annotations
 
+import time
+
 from PySide6.QtCore import QObject, QTimer, Signal
 
 from eqfx.core.autostart import set_autostart
 from eqfx.core.pipewire import (
     FilterChain,
     Sink,
+    card_key,
     default_hardware,
     hardware_sinks,
+    invalidate_sink_cache,
     eqfx_sink,
     move_app_streams_to_eqfx,
     playback_destination,
@@ -41,8 +45,9 @@ class Engine(QObject):
         self.devices: list[Sink] = []
         self.target: Sink | None = None
         self._poll = QTimer(self)
-        self._poll.setInterval(200)
+        self._poll.setInterval(1500)
         self._poll.timeout.connect(self.refresh_devices)
+        self._last_reclaim = 0.0
         self._apply_timer = QTimer(self)
         self._apply_timer.setSingleShot(True)
         self._apply_timer.setInterval(40)
@@ -80,6 +85,7 @@ class Engine(QObject):
         save_settings(self.settings)
 
     def refresh_devices(self) -> None:
+        invalidate_sink_cache()
         devices = hardware_sinks()
         snapshot = [(d.node_id, d.name, d.description) for d in devices]
         previous = [(d.node_id, d.name, d.description) for d in self.devices]
@@ -93,14 +99,22 @@ class Engine(QObject):
             self._switch_target(wanted)
         else:
             self._reclaim_playback()
-        if wanted and peek_wanted_output() == wanted.name:
-            clear_wanted_output()
+        if wanted:
+            requested = peek_wanted_output()
+            if requested == wanted.name or (requested and card_key(requested) == card_key(wanted.name)):
+                clear_wanted_output()
         self._apply_wanted_preset()
 
     def _match(self, name: str) -> Sink | None:
         if not name:
             return None
-        return next((d for d in self.devices if d.name == name), None)
+        exact = next((d for d in self.devices if d.name == name), None)
+        if exact:
+            return exact
+        key = card_key(name)
+        if not key:
+            return None
+        return next((d for d in self.devices if card_key(d.name) == key), None)
 
     def _resolve_target(self) -> Sink | None:
         if not self.settings.follow_default_output and self.settings.output_device:
@@ -113,11 +127,11 @@ class Engine(QObject):
         picked = user_selected_hardware()
         if picked:
             return picked
+        if self.target and self._match(self.target.name):
+            return self._match(self.target.name)
         playing = self._match(playback_destination())
         if playing:
             return playing
-        if self.target and self._match(self.target.name):
-            return self._match(self.target.name)
         current = default_hardware()
         if current:
             return current
@@ -232,9 +246,14 @@ class Engine(QObject):
         eq = eqfx_sink()
         if eq is None:
             return
-        if not eq.default:
-            set_default_sink(eq.node_id)
-            move_app_streams_to_eqfx()
+        if eq.default:
+            return
+        now = time.monotonic()
+        if now - self._last_reclaim < 2.0:
+            return
+        self._last_reclaim = now
+        set_default_sink(eq.node_id)
+        move_app_streams_to_eqfx()
 
     def _flush(self) -> None:
         if not self._live:
