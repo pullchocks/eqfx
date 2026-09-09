@@ -6,6 +6,15 @@ eqFX is playback only. It does not touch your microphone.
 
 It is a Linux app. It is not tied to Pop!_OS. Any distro with PipeWire (Ubuntu, Fedora, Arch, Debian, Omarchy, and the rest) should work. It will not run on Windows, macOS, or a PulseAudio-only machine.
 
+## Requirements
+
+Install these on the host first. `setup.py` installs PySide6 into `.venv`; it does **not** install Python for you.
+
+- Linux with PipeWire (not PulseAudio-only)
+- **Python 3.10+** (`python3 --version`), from your distro packages
+- `wpctl` (WirePlumber) and `pactl` (PipeWire-pulse)
+- [PySide6](https://pypi.org/project/PySide6/) 6.5+ (pulled into `.venv` by setup)
+
 ## Install
 
 From the project root:
@@ -14,14 +23,14 @@ From the project root:
 python3 setup.py
 ```
 
-That is the first-run installer (not setuptools — package metadata is in `pyproject.toml`). It:
+That is the first-run installer (not setuptools; package metadata is in `pyproject.toml`). It:
 
 - checks for Python 3.10+, PipeWire, `wpctl`, and `pactl`
 - installs PySide6 into `.venv`
 - writes the app-menu launcher and icon for **this checkout**
 - enables login autostart (tray)
 
-Then open **eqFX** from the app menu. After login it starts hidden in the tray — look for the tray icon (Hyprland/Omarchy: top bar), or launch again to raise the window. Closing the window keeps the EQ running; quit from the tray to remove it from the PipeWire graph.
+Then open **eqFX** from the app menu. After login it starts hidden in the tray. Look for the tray icon (Hyprland/Omarchy: top bar), or launch again to raise the window. Closing the window keeps the EQ running; quit from the tray to remove it from the PipeWire graph.
 
 Skip autostart if you only want the menu entry:
 
@@ -82,9 +91,9 @@ The Output menu shows `Follow ·` plus the active device. Pulse/PipeWire will st
 
 **Session**
 
-- **Start eqFX when I log in** — `~/.config/autostart/eqfx.desktop`
-- **Start in the background** — tray only
-- **Close window to tray** — the EQ keeps running after you close the window
+- **Start eqFX when I log in**: `~/.config/autostart/eqfx.desktop`
+- **Start in the background**: tray only
+- **Close window to tray**: the EQ keeps running after you close the window
 
 **Devices**
 
