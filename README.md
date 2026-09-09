@@ -4,7 +4,7 @@ System-wide 10-band parametric EQ for PipeWire. Games, browsers, and music playe
 
 eqFX is playback only. It does not touch your microphone.
 
-It is a Linux app. It is not tied to Pop!_OS. Any distro with PipeWire (Ubuntu, Fedora, Arch, Debian, and the rest) should work. It will not run on Windows, macOS, or a PulseAudio-only machine.
+It is a Linux app. It is not tied to Pop!_OS. Any distro with PipeWire (Ubuntu, Fedora, Arch, Debian, Omarchy, and the rest) should work. It will not run on Windows, macOS, or a PulseAudio-only machine.
 
 ## Install
 
@@ -21,7 +21,7 @@ That is the first-run installer (not setuptools — package metadata is in `pypr
 - writes the app-menu launcher and icon for **this checkout**
 - enables login autostart (tray)
 
-Then open **eqFX** from the app menu. After login it starts hidden in the tray. A second launch raises the existing window. Closing the window keeps the EQ running; quit from the tray to remove it from the PipeWire graph.
+Then open **eqFX** from the app menu. After login it starts hidden in the tray — look for the tray icon (Hyprland/Omarchy: top bar), or launch again to raise the window. Closing the window keeps the EQ running; quit from the tray to remove it from the PipeWire graph.
 
 Skip autostart if you only want the menu entry:
 
