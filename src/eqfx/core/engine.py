@@ -5,6 +5,7 @@ import time
 from PySide6.QtCore import QObject, QTimer, Signal
 
 from eqfx.core.autostart import set_autostart
+from eqfx.core.monitor import SpectrumMonitor
 from eqfx.core.pipewire import (
     FilterChain,
     Sink,
@@ -13,14 +14,26 @@ from eqfx.core.pipewire import (
     hardware_sinks,
     invalidate_sink_cache,
     eqfx_sink,
+    get_sink_mute,
+    get_sink_volume,
     move_app_streams_to_eqfx,
     move_eqfx_playback,
     playback_destination,
     select_sink,
     set_default_sink,
+    set_sink_mute,
+    set_sink_volume,
     user_selected_hardware,
 )
-from eqfx.core.presets import PRESETS, Band, apply_patches, find_preset
+from eqfx.core.presets import (
+    PRESETS,
+    Band,
+    apply_patches,
+    delete_user_preset,
+    find_preset,
+    load_user_presets,
+    save_user_preset,
+)
 from eqfx.core.store import (
     Settings,
     clear_wanted_output,
@@ -31,6 +44,8 @@ from eqfx.core.store import (
     peek_wanted_preset,
     save_settings,
     store_device_curve,
+    store_device_volume,
+    volume_for_device,
 )
 
 
@@ -55,6 +70,8 @@ class Engine(QObject):
         self._apply_timer.setInterval(40)
         self._apply_timer.timeout.connect(self._flush)
         self._live = False
+        self.monitor = SpectrumMonitor()
+        self.monitor_enabled = True
 
     def start(self) -> None:
         self.refresh_devices()
@@ -65,6 +82,9 @@ class Engine(QObject):
 
     def shutdown(self, restore: bool = True) -> None:
         self._poll.stop()
+        if self.target:
+            self._capture_device_volume(self.target.name)
+        self.monitor.stop()
         self.persist()
         sink = eqfx_sink()
         if restore and self.settings.restore_default_on_quit and self.settings.previous_default:
@@ -84,6 +104,7 @@ class Engine(QObject):
                 self.bands,
                 float(self.settings.output_gain or 0),
             )
+            self._capture_device_volume(self.target.name)
         save_settings(self.settings)
 
     def refresh_devices(self) -> None:
@@ -100,6 +121,8 @@ class Engine(QObject):
         if wanted and (self.target is None or wanted.name != self.target.name):
             self._switch_target(wanted)
         else:
+            if self.target:
+                self._capture_device_volume(self.target.name)
             self._reclaim_playback()
         if wanted:
             requested = peek_wanted_output()
@@ -140,6 +163,10 @@ class Engine(QObject):
         return self.devices[0] if self.devices else None
 
     def _switch_target(self, sink: Sink) -> None:
+        fallback_volume: int | None = None
+        if self.target and self.target.name != sink.name:
+            fallback_volume = get_sink_volume(self.target.name)
+            self._capture_device_volume(self.target.name)
         if self.target and self.settings.remember_per_device:
             store_device_curve(
                 self.settings,
@@ -148,6 +175,8 @@ class Engine(QObject):
                 self.bands,
                 float(self.settings.output_gain or 0),
             )
+        # Restore the destination volume before audio is moved onto it.
+        self._restore_device_volume(sink.name, fallback_volume=fallback_volume)
         self.target = sink
         self.settings.output_device = sink.name
         if self.settings.remember_per_device:
@@ -156,12 +185,14 @@ class Engine(QObject):
             self.bands = bands
             self.settings.output_gain = gain
         self.status.emit(f"Routing through {sink.description}")
+        self._sync_monitor()
         self.changed.emit()
         self._flush()
 
     def engage(self) -> None:
         target = self._resolve_target()
         if target is None:
+            self.monitor.stop()
             self.status.emit("No playback device found")
             self.changed.emit()
             return
@@ -174,9 +205,11 @@ class Engine(QObject):
             self.settings.preset_id = preset_id
             self.bands = bands
             self.settings.output_gain = gain
+        self._restore_device_volume(target.name)
         self.target = target
         self._live = True
         self._flush()
+        self._sync_monitor()
         eq = eqfx_sink()
         if eq and self.settings.capture_default:
             set_default_sink(eq.node_id)
@@ -185,7 +218,43 @@ class Engine(QObject):
             self.status.emit("eqFX ready. Point apps at eqFX, or enable capture in Settings.")
         else:
             self.status.emit("Could not start the eqFX PipeWire graph")
+        if self.monitor_enabled and not self.monitor.available:
+            self.status.emit(self.monitor.error or "Live monitor needs parec")
         self.changed.emit()
+
+    def _capture_device_volume(self, name: str) -> None:
+        if not self.settings.remember_device_volume or not name:
+            return
+        volume = get_sink_volume(name)
+        if volume is None:
+            return
+        store_device_volume(name, volume, get_sink_mute(name))
+
+    def _restore_device_volume(self, name: str, fallback_volume: int | None = None) -> None:
+        if not self.settings.remember_device_volume or not name:
+            return
+        volume, mute = volume_for_device(name)
+        if volume is not None:
+            set_sink_volume(name, volume)
+        elif fallback_volume is not None:
+            # First visit to this sink: start from the level we just left, not a stale blast.
+            set_sink_volume(name, fallback_volume)
+            store_device_volume(name, fallback_volume)
+        if mute is not None:
+            set_sink_mute(name, mute)
+
+    def set_monitor_enabled(self, on: bool) -> None:
+        self.monitor_enabled = bool(on)
+        self._sync_monitor()
+        self.changed.emit()
+
+    def _sync_monitor(self) -> None:
+        if not self.monitor_enabled or not self._live or self.target is None:
+            self.monitor.stop()
+            return
+        # Hardware sink monitor hears post-EQ audio after eqfx.playback.
+        source = f"{self.target.name}.monitor"
+        self.monitor.start(source)
 
     def set_output_device(self, name: str, follow_default: bool) -> None:
         self.settings.follow_default_output = follow_default
@@ -199,7 +268,8 @@ class Engine(QObject):
         requested = peek_wanted_preset()
         if not requested:
             return
-        if any(preset.id == requested for preset in PRESETS):
+        known = {preset.id for preset in PRESETS} | {preset.id for preset in load_user_presets()}
+        if requested in known:
             self.load_preset(requested)
         clear_wanted_preset()
 
@@ -209,7 +279,42 @@ class Engine(QObject):
         self.bands = apply_patches(preset.patches)
         self.settings.output_gain = preset.output_gain
         self.changed.emit()
-        self.status.emit(f"Preset · {preset.name}")
+        label = "Saved" if preset.is_user else "Preset"
+        self.status.emit(f"{label} · {preset.name}")
+        self.schedule_apply()
+        self.persist()
+
+    def save_current_as(self, name: str, replace_id: str | None = None):
+        preset = save_user_preset(
+            name,
+            self.bands,
+            float(self.settings.output_gain or 0),
+            replace_id=replace_id,
+        )
+        self.settings.preset_id = preset.id
+        self.persist()
+        self.status.emit(f"Saved · {preset.name}")
+        self.changed.emit()
+        return preset
+
+    def delete_saved(self, preset_id: str) -> bool:
+        ok = delete_user_preset(preset_id)
+        if ok and self.settings.preset_id == preset_id:
+            self.settings.preset_id = "flat"
+            self.persist()
+        if ok:
+            self.status.emit("Deleted saved curve")
+            self.changed.emit()
+        return ok
+
+    def reset_band(self, index: int) -> None:
+        from eqfx.core.presets import default_bands
+
+        if index < 0 or index >= len(self.bands):
+            return
+        blank = default_bands()[index]
+        self.bands[index] = blank
+        self.changed.emit()
         self.schedule_apply()
         self.persist()
 

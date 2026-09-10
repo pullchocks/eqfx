@@ -13,6 +13,7 @@ Install these on the host first. `setup.py` installs PySide6 into `.venv`; it do
 - Linux with PipeWire (not PulseAudio-only)
 - **Python 3.10+** (`python3 --version`), from your distro packages
 - `wpctl` (WirePlumber) and `pactl` (PipeWire-pulse)
+- `parec` (from `pulseaudio-utils` or PipeWire Pulse tools) for the live output monitor
 - [PySide6](https://pypi.org/project/PySide6/) 6.5+ (pulled into `.venv` by setup)
 
 ## Install
@@ -62,6 +63,8 @@ apps  →  eqFX  →  Wave 3 / speakers / HDMI / …
 
 Band gain, frequency, and Q update live. Changing a filter type rebuilds the graph.
 
+The curve view includes a **live post-EQ spectrum** (Monitor in the top bar) tapped from the current output device’s monitor stream, plus L/R level meters. Play audio through eqFX, move a band, and you should see the spectrum shift with the curve. Needs `parec`.
+
 ### Microphone
 
 Leave Discord, Steam, and system **input** on the real mic (for example the Elgato Wave 3). Do not set the microphone to eqFX.
@@ -74,9 +77,13 @@ Keep **Follow output-switcher buttons** on for that. Pin a device in the Output 
 
 The Output menu shows `Follow ·` plus the active device. Pulse/PipeWire will still report **eqFX** as the default sink; that is intentional.
 
+eqFX also remembers each hardware device’s **volume** (and mute) when you switch away, then restores it when you come back, so leaving a quiet headset does not dump you onto speakers that were last left loud. Turn that off in Settings → Devices if you prefer.
+
 ## Presets
 
-67 factory curves in four banks, plus **All**:
+67 factory curves in four banks, plus **All**, on the **Factory** tab.
+
+Use the **Saved** tab for your own curves: name the current EQ and click **Save**, **Update** an existing one, or **Delete**. Saves live in `~/.local/share/eqfx/user_presets.json` and stay separate from the factory list.
 
 | Bank | Count | For |
 | --- | ---: | --- |
@@ -101,6 +108,7 @@ The Output menu shows `Follow ·` plus the active device. Pulse/PipeWire will st
 - Make eqFX the default playback device
 - Restore the previous default when eqFX quits
 - Remember a separate EQ for each output device
+- Remember volume level for each output device
 
 ## PopStream
 
@@ -127,5 +135,7 @@ eqFX watches drop files under `~/.local/share/eqfx/`:
 | Path | Role |
 | --- | --- |
 | `~/.local/share/eqfx/settings.json` | session, devices, per-output curves |
+| `~/.local/share/eqfx/user_presets.json` | Saved tab curves |
+| `~/.local/share/eqfx/device_volumes.json` | per-device volume / mute memory (shared with PopStream) |
 | `~/.cache/eqfx/filter-chain.conf` | live PipeWire graph |
 | `packaging/eqfx` | GUI launcher |

@@ -83,6 +83,11 @@ class SettingsDialog(QDialog):
         self.restore.toggled.connect(self._toggle_restore)
         self.remember = QCheckBox("Remember a separate EQ for each output device")
         self.remember.toggled.connect(self._toggle_remember)
+        self.remember_vol = QCheckBox("Remember volume level for each output device")
+        self.remember_vol.setToolTip(
+            "When you leave a headset or speakers, store their volume and restore it next time"
+        )
+        self.remember_vol.toggled.connect(self._toggle_remember_vol)
         refresh = QPushButton("Refresh devices")
         refresh.clicked.connect(self.engine.refresh_devices)
         layout.addRow(hint)
@@ -92,6 +97,7 @@ class SettingsDialog(QDialog):
         layout.addRow(self.capture)
         layout.addRow(self.restore)
         layout.addRow(self.remember)
+        layout.addRow(self.remember_vol)
         return page
 
     def _sync(self) -> None:
@@ -104,6 +110,7 @@ class SettingsDialog(QDialog):
             self.capture,
             self.restore,
             self.remember,
+            self.remember_vol,
             self.device,
         ]
         for widget in widgets:
@@ -115,6 +122,7 @@ class SettingsDialog(QDialog):
         self.capture.setChecked(s.capture_default)
         self.restore.setChecked(s.restore_default_on_quit)
         self.remember.setChecked(s.remember_per_device)
+        self.remember_vol.setChecked(s.remember_device_volume)
         self.device.setEnabled(not s.follow_default_output)
         for widget in widgets:
             widget.blockSignals(False)
@@ -167,4 +175,8 @@ class SettingsDialog(QDialog):
 
     def _toggle_remember(self, on: bool) -> None:
         self.engine.settings.remember_per_device = on
+        self.engine.persist()
+
+    def _toggle_remember_vol(self, on: bool) -> None:
+        self.engine.settings.remember_device_volume = on
         self.engine.persist()

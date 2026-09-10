@@ -114,6 +114,24 @@ QCheckBox::indicator:checked {{
     background: {C.accent};
     border-color: {C.accent};
 }}
+QFrame#bandCol {{
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 8px;
+}}
+QFrame#bandCol[selected="true"] {{
+    background: {C.accent_dim};
+    border: 1px solid {C.accent};
+}}
+QLabel#bandPick {{
+    font-weight: 600;
+    color: {C.accent_2};
+}}
+QPushButton#bandStep {{
+    min-width: 32px;
+    max-width: 32px;
+    padding: 6px 0;
+}}
 QSlider::groove:vertical {{
     background: {C.well};
     width: 8px;

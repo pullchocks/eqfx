@@ -25,6 +25,70 @@ def settings_path() -> Path:
     return data_dir() / "settings.json"
 
 
+def device_volumes_path() -> Path:
+    """Per-hardware-sink Pulse volume memory (shared with PopStream switchers)."""
+    return data_dir() / "device_volumes.json"
+
+
+def load_device_volumes() -> dict[str, dict]:
+    path = device_volumes_path()
+    if not path.is_file():
+        return {}
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    if not isinstance(raw, dict):
+        return {}
+    out: dict[str, dict] = {}
+    for key, value in raw.items():
+        if not isinstance(key, str) or not isinstance(value, dict):
+            continue
+        entry: dict = {}
+        if "volume" in value:
+            try:
+                entry["volume"] = max(0, min(150, int(value["volume"])))
+            except (TypeError, ValueError):
+                pass
+        if "mute" in value:
+            entry["mute"] = bool(value["mute"])
+        if entry:
+            out[key] = entry
+    return out
+
+
+def save_device_volumes(volumes: dict[str, dict]) -> None:
+    path = device_volumes_path()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(volumes, indent=2), encoding="utf-8")
+
+
+def store_device_volume(name: str, volume: int, mute: bool | None = None) -> None:
+    if not name:
+        return
+    volumes = load_device_volumes()
+    entry = dict(volumes.get(name) or {})
+    entry["volume"] = max(0, min(150, int(volume)))
+    if mute is not None:
+        entry["mute"] = bool(mute)
+    volumes[name] = entry
+    save_device_volumes(volumes)
+
+
+def volume_for_device(name: str) -> tuple[int | None, bool | None]:
+    if not name:
+        return None, None
+    entry = load_device_volumes().get(name) or {}
+    volume = entry.get("volume")
+    mute = entry.get("mute")
+    try:
+        vol_i = int(volume) if volume is not None else None
+    except (TypeError, ValueError):
+        vol_i = None
+    mute_b = bool(mute) if mute is not None else None
+    return vol_i, mute_b
+
+
 def runtime_dir() -> Path:
     path = Path.home() / ".cache" / "eqfx"
     legacy = Path.home() / ".cache" / "minieq"
@@ -110,6 +174,7 @@ class Settings:
     follow_default_output: bool = True
     output_device: str = ""
     remember_per_device: bool = True
+    remember_device_volume: bool = True
     preset_id: str = "flat"
     bypass: bool = False
     output_gain: float = 0.0

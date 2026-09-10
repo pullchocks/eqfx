@@ -126,6 +126,10 @@ def check_system() -> None:
             + ", ".join(missing)
             + ".\nInstall PipeWire / WirePlumber (for wpctl) and the Pulse compat tools (for pactl)."
         )
+    if shutil.which("parec") is None:
+        print(
+            "note: parec not found — live Monitor needs pulseaudio-utils / PipeWire Pulse tools"
+        )
 
 
 def install_deps() -> None:

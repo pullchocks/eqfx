@@ -256,6 +256,44 @@ def move_app_streams_to_eqfx() -> None:
         run(["pactl", "move-sink-input", index, SINK_NAME], timeout=2.0)
 
 
+def get_sink_volume(name: str) -> int | None:
+    """Return Pulse sink volume percent, or None if unreadable."""
+    if not name:
+        return None
+    proc = run(["pactl", "get-sink-volume", name], timeout=2.0)
+    match = re.search(r"(\d+)%", proc.stdout or "")
+    if not match:
+        return None
+    return max(0, min(150, int(match.group(1))))
+
+
+def get_sink_mute(name: str) -> bool | None:
+    if not name:
+        return None
+    proc = run(["pactl", "get-sink-mute", name], timeout=2.0)
+    text = (proc.stdout or "").lower()
+    if "yes" in text:
+        return True
+    if "no" in text:
+        return False
+    return None
+
+
+def set_sink_volume(name: str, percent: int) -> bool:
+    if not name:
+        return False
+    percent = max(0, min(150, int(percent)))
+    proc = run(["pactl", "set-sink-volume", name, f"{percent}%"], timeout=2.0)
+    return proc.returncode == 0
+
+
+def set_sink_mute(name: str, muted: bool) -> bool:
+    if not name:
+        return False
+    proc = run(["pactl", "set-sink-mute", name, "1" if muted else "0"], timeout=2.0)
+    return proc.returncode == 0
+
+
 def _sink_inputs() -> list[tuple[str, str]]:
     return [(index, name) for index, name, _sink in _sink_input_rows()]
 
