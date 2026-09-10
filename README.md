@@ -4,7 +4,7 @@ System-wide 10-band parametric EQ for PipeWire. Games, browsers, and music playe
 
 eqFX is playback only. It does not touch your microphone.
 
-It is a Linux app. It is not tied to Pop!_OS. Any distro with PipeWire (Ubuntu, Fedora, Arch, Debian, Omarchy, and the rest) should work. It will not run on Windows, macOS, or a PulseAudio-only machine.
+Linux with PipeWire required. It will not run on Windows, macOS, or a PulseAudio-only machine.
 
 ## Requirements
 
