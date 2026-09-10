@@ -2,7 +2,15 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "$(readlink -f "$0")")/.." && pwd)"
 cd "$ROOT"
+
+# Prefer a real interpreter path. Hyprland/uwsm put mise shims first on PATH;
+# `exec -a eqfx python3` then invokes the shim with argv0=eqfx, and mise
+# errors with "eqfx is not a valid shim" before Python starts.
 if [[ -x "$ROOT/.venv/bin/python" ]] && "$ROOT/.venv/bin/python" -c "import PySide6" >/dev/null 2>&1; then
-  exec -a eqfx "$ROOT/.venv/bin/python" "$ROOT/run.py" "$@"
+  PYTHON="$ROOT/.venv/bin/python"
+elif [[ -x /usr/bin/python3 ]]; then
+  PYTHON=/usr/bin/python3
+else
+  PYTHON="$(command -v python3)"
 fi
-exec -a eqfx python3 "$ROOT/run.py" "$@"
+exec -a eqfx "$PYTHON" "$ROOT/run.py" "$@"

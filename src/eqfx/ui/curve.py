@@ -4,7 +4,7 @@ import math
 
 from PySide6.QtCore import QPointF, Qt
 from PySide6.QtGui import QColor, QLinearGradient, QPainter, QPainterPath, QPen
-from PySide6.QtWidgets import QWidget
+from PySide6.QtWidgets import QSizePolicy, QWidget
 
 from eqfx.core.presets import Band
 from eqfx.ui.theme import C
@@ -96,7 +96,8 @@ class CurveWidget(QWidget):
         self.bands: list[Band] = []
         self.bypass = False
         self.selected = 5
-        self.setMinimumHeight(168)
+        self.setMinimumHeight(160)
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
 
     def set_state(self, bands: list[Band], selected: int, bypass: bool) -> None:
         self.bands = bands

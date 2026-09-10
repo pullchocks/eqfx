@@ -5,6 +5,7 @@ from PySide6.QtGui import QAction, QKeySequence
 from PySide6.QtWidgets import (
     QApplication,
     QComboBox,
+    QDoubleSpinBox,
     QFrame,
     QHBoxLayout,
     QLabel,
@@ -14,12 +15,12 @@ from PySide6.QtWidgets import (
     QMainWindow,
     QMenu,
     QPushButton,
+    QSizePolicy,
     QSlider,
     QStatusBar,
     QSystemTrayIcon,
     QVBoxLayout,
     QWidget,
-    QDoubleSpinBox,
 )
 
 from eqfx.core.engine import Engine
@@ -40,6 +41,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("eqFX")
         self.setWindowIcon(application_icon())
         self.resize(860, 620)
+        self.setMinimumSize(720, 520)
         self._setup_tray()
 
         root = QWidget()
@@ -52,6 +54,7 @@ class MainWindow(QMainWindow):
         right.setSpacing(10)
         right.addWidget(self._topbar())
         self.curve = CurveWidget()
+        self.curve.setMinimumHeight(160)
         wrap = QFrame()
         wrap.setObjectName("panel")
         curve_l = QVBoxLayout(wrap)
@@ -88,7 +91,8 @@ class MainWindow(QMainWindow):
         self.bypass.setCheckable(True)
         self.bypass.toggled.connect(self.engine.set_bypass)
         self.device = QComboBox()
-        self.device.setMinimumWidth(220)
+        self.device.setMinimumWidth(180)
+        self.device.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
         self.device.currentIndexChanged.connect(self._pick_device)
         settings = QPushButton("Settings")
         settings.clicked.connect(self._open_settings)
@@ -104,7 +108,9 @@ class MainWindow(QMainWindow):
     def _presets_pane(self) -> QWidget:
         pane = QFrame()
         pane.setObjectName("panel")
-        pane.setFixedWidth(250)
+        pane.setMinimumWidth(200)
+        pane.setMaximumWidth(280)
+        pane.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
         layout = QVBoxLayout(pane)
         self.search = QLineEdit()
         self.search.setPlaceholderText(f"Search {len(PRESETS)} presets")
@@ -136,7 +142,8 @@ class MainWindow(QMainWindow):
             slider = QSlider(Qt.Orientation.Vertical)
             slider.setRange(-120, 120)
             slider.setValue(0)
-            slider.setMinimumHeight(120)
+            slider.setMinimumHeight(100)
+            slider.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
             slider.valueChanged.connect(lambda value, idx=i: self._slider_moved(idx, value))
             slider.sliderPressed.connect(lambda idx=i: self._select(idx))
             name = QLabel(str(i + 1))
@@ -146,7 +153,7 @@ class MainWindow(QMainWindow):
             freq.setObjectName("muted")
             freq.setAlignment(Qt.AlignmentFlag.AlignCenter)
             col.addWidget(gain)
-            col.addWidget(slider, 1, Qt.AlignmentFlag.AlignHCenter)
+            col.addWidget(slider, 0, Qt.AlignmentFlag.AlignHCenter)
             col.addWidget(name)
             col.addWidget(freq)
             row.addLayout(col)
@@ -160,7 +167,9 @@ class MainWindow(QMainWindow):
         box.setObjectName("panel")
         row = QHBoxLayout(box)
         self.sel_label = QLabel("Band 6")
+        self.sel_label.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
         self.type_box = QComboBox()
+        self.type_box.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
         for key, label in LABELS.items():
             self.type_box.addItem(label, key)
         self.type_box.currentIndexChanged.connect(self._type_changed)
@@ -168,11 +177,15 @@ class MainWindow(QMainWindow):
         self.freq.setRange(20, 20000)
         self.freq.setDecimals(1)
         self.freq.setSuffix(" Hz")
+        self.freq.setMinimumWidth(80)
+        self.freq.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
         self.freq.valueChanged.connect(lambda v: self.engine.set_band(self.selected, frequency=v))
         self.q = QDoubleSpinBox()
         self.q.setRange(0.1, 18)
         self.q.setDecimals(2)
         self.q.setSingleStep(0.05)
+        self.q.setMinimumWidth(60)
+        self.q.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
         self.q.valueChanged.connect(lambda v: self.engine.set_band(self.selected, q=v))
         enable = QPushButton("On")
         enable.clicked.connect(self._toggle_enable)
@@ -182,7 +195,7 @@ class MainWindow(QMainWindow):
         row.addWidget(self.sel_label)
         row.addWidget(self.type_box)
         row.addWidget(QLabel("Freq"))
-        row.addWidget(self.freq)
+        row.addWidget(self.freq, 1)
         row.addWidget(QLabel("Q"))
         row.addWidget(self.q)
         row.addWidget(enable)

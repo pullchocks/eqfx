@@ -23,8 +23,7 @@ class SettingsDialog(QDialog):
         self.engine = engine
         self.setWindowTitle("eqFX Settings")
         self.setModal(False)
-        self.setMinimumWidth(460)
-        self.setMinimumHeight(420)
+        self.setMinimumSize(360, 280)
         outer = QVBoxLayout(self)
         tabs = QTabWidget()
         tabs.addTab(self._session_page(), "Session")
