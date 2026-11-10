@@ -4,7 +4,7 @@ import sys
 
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtNetwork import QLocalServer, QLocalSocket
-from PySide6.QtWidgets import QApplication, QSystemTrayIcon
+from PySide6.QtWidgets import QApplication
 
 from eqfx.core.engine import Engine
 from eqfx.ui.icons import application_icon
@@ -65,10 +65,9 @@ def main(argv: list[str] | None = None) -> int:
     window = MainWindow(engine)
     _listen(app, window)
     engine.start()
-    start_hidden = tray or engine.settings.start_in_tray
-    if start_hidden and QSystemTrayIcon.isSystemTrayAvailable():
+    window._live_in_tray = tray or engine.settings.start_in_tray
+    if window._live_in_tray:
         window.hide()
-        window.tray.show()
     else:
         window.show()
     code = app.exec()

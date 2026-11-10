@@ -53,6 +53,7 @@ class MainWindow(QMainWindow):
         self.engine = engine
         self.selected = 5
         self._force_quit = False
+        self._live_in_tray = False
         self._settings: SettingsDialog | None = None
         self._filling = False
         self.setWindowTitle("eqFX")
@@ -341,7 +342,10 @@ class MainWindow(QMainWindow):
         return box
 
     def _setup_tray(self) -> None:
-        self.tray = QSystemTrayIcon(tray_icon(), self)
+        # Always create the icon. isSystemTrayAvailable() is often false at
+        # login before the bar's StatusNotifier host is up.
+        app = QApplication.instance()
+        self.tray = QSystemTrayIcon(tray_icon(), app if app is not None else self)
         menu = QMenu()
         show = QAction("Show eqFX", self)
         show.triggered.connect(self._show_from_tray)
@@ -364,6 +368,20 @@ class MainWindow(QMainWindow):
         )
         self.tray.setToolTip("eqFX")
         self.tray.show()
+        self._tray_tries = 0
+        self._tray_retry = QTimer(self)
+        self._tray_retry.setInterval(400)
+        self._tray_retry.timeout.connect(self._ensure_tray)
+        self._tray_retry.start()
+
+    def _ensure_tray(self) -> None:
+        if self.tray is None:
+            return
+        if not self.tray.isVisible():
+            self.tray.show()
+        self._tray_tries += 1
+        if QSystemTrayIcon.isSystemTrayAvailable() or self._tray_tries >= 50:
+            self._tray_retry.stop()
 
     def _show_from_tray(self) -> None:
         self.showNormal()
@@ -376,13 +394,21 @@ class MainWindow(QMainWindow):
         QApplication.quit()
 
     def closeEvent(self, event) -> None:
-        if self._force_quit or not self.engine.settings.close_to_tray or not self.tray.isVisible():
+        # Keep running while the icon is still registering, and whenever this
+        # launch is meant to live in the tray. Quitting here would drop the EQ.
+        stay = self.engine.settings.close_to_tray and (
+            self.tray.isVisible() or self._live_in_tray or self._tray_retry.isActive()
+        )
+        if self._force_quit or not stay:
             self.engine.shutdown()
             event.accept()
             return
         event.ignore()
         self.hide()
-        self.tray.showMessage("eqFX", "Still equalizing in the background.", QSystemTrayIcon.MessageIcon.NoIcon, 1800)
+        if self.tray.isVisible():
+            self.tray.showMessage(
+                "eqFX", "Still equalizing in the background.", QSystemTrayIcon.MessageIcon.NoIcon, 1800
+            )
 
     def _open_settings(self) -> None:
         if self._settings is None:
