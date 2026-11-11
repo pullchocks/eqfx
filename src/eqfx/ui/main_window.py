@@ -347,6 +347,9 @@ class MainWindow(QMainWindow):
         app = QApplication.instance()
         self.tray = QSystemTrayIcon(tray_icon(), app if app is not None else self)
         menu = QMenu()
+        # Qt does not take ownership. Keep the menu alive for the tray's
+        # StatusNotifier export; a hidden main window must not be its parent.
+        self._tray_menu = menu
         show = QAction("Show eqFX", self)
         show.triggered.connect(self._show_from_tray)
         bypass = QAction("Toggle bypass", self)

@@ -3,8 +3,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 import json
+import os
 import re
+import signal
 import subprocess
+import threading
 import time
 
 from eqfx.core.presets import Band, PW_LABEL
@@ -48,14 +51,89 @@ class Sink:
 _SINK_CACHE_TTL = 0.8
 _sink_cache: tuple[float, list[Sink]] | None = None
 
+# A wedged Wave:3 leaves WirePlumber in usb_control_msg. wpctl/pactl then sit
+# in poll, and subprocess.run's timeout path waits forever for SIGKILL to land.
+_PIPE_TOOLS = {"wpctl", "pactl", "pw-cli", "pw-dump"}
+_PAUSE_S = 10.0
+_pause_until = 0.0
+_last_good: dict[tuple[str, ...], subprocess.CompletedProcess[str]] = {}
+_run_lock = threading.Lock()
+
+
+def _tool(argv: list[str]) -> str:
+    return os.path.basename(argv[0]) if argv else ""
+
+
+def _listing(argv: list[str]) -> bool:
+    tool = _tool(argv)
+    if tool == "wpctl":
+        return len(argv) >= 2 and argv[1] == "status"
+    if tool == "pactl":
+        return "list" in argv or (len(argv) >= 2 and argv[1].startswith("get-"))
+    return tool == "pw-dump"
+
+
+def _paused() -> bool:
+    with _run_lock:
+        return time.monotonic() < _pause_until
+
+
+def _pause() -> None:
+    global _pause_until
+    with _run_lock:
+        _pause_until = time.monotonic() + _PAUSE_S
+
+
+def _miss(argv: list[str]) -> subprocess.CompletedProcess[str]:
+    if _listing(argv):
+        with _run_lock:
+            cached = _last_good.get(tuple(argv))
+        if cached is not None:
+            return cached
+    return subprocess.CompletedProcess(argv, 124, "", "timed out")
+
+
+def _kill_proc(proc: subprocess.Popen[str]) -> None:
+    try:
+        os.killpg(proc.pid, signal.SIGKILL)
+    except OSError:
+        try:
+            proc.kill()
+        except OSError:
+            return
+    try:
+        proc.wait(timeout=0.2)
+    except subprocess.TimeoutExpired:
+        return
+
 
 def run(argv: list[str], timeout: float = 2.0) -> subprocess.CompletedProcess[str]:
+    tool = _tool(argv)
+    if tool in _PIPE_TOOLS and _paused():
+        return _miss(argv)
+    limit = 1.0 if tool in _PIPE_TOOLS else timeout
     try:
-        return subprocess.run(argv, capture_output=True, text=True, timeout=timeout)
-    except subprocess.TimeoutExpired:
-        return subprocess.CompletedProcess(argv, 124, "", "timed out")
+        proc = subprocess.Popen(
+            argv,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            start_new_session=True,
+        )
     except OSError as exc:
         return subprocess.CompletedProcess(argv, 1, "", str(exc))
+    try:
+        out, err = proc.communicate(timeout=limit)
+    except subprocess.TimeoutExpired:
+        _kill_proc(proc)
+        if tool in _PIPE_TOOLS:
+            _pause()
+        return _miss(argv)
+    result = subprocess.CompletedProcess(argv, proc.returncode or 0, out or "", err or "")
+    if result.returncode == 0 and _listing(argv) and result.stdout:
+        with _run_lock:
+            _last_good[tuple(argv)] = result
+    return result
 
 
 def invalidate_sink_cache() -> None:

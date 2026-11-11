@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import threading
 import time
+import traceback
 
-from PySide6.QtCore import QObject, QTimer, Signal
+from PySide6.QtCore import QObject, QThread, QTimer, Signal
 
 from eqfx.core.autostart import set_autostart
 from eqfx.core.monitor import SpectrumMonitor
@@ -53,6 +55,7 @@ class Engine(QObject):
     changed = Signal()
     status = Signal(str)
     devices_changed = Signal()
+    _apply_soon = Signal()
 
     def __init__(self) -> None:
         super().__init__()
@@ -69,19 +72,55 @@ class Engine(QObject):
         self._apply_timer.setSingleShot(True)
         self._apply_timer.setInterval(40)
         self._apply_timer.timeout.connect(self._flush)
+        self._apply_soon.connect(self._apply_timer.start)
         self._live = False
         self.monitor = SpectrumMonitor()
         self.monitor_enabled = True
+        self._audio_lock = threading.Lock()
+        self._audio_jobs: list = []
+        self._audio_thread: threading.Thread | None = None
+        self._shutting = False
+
+    def _defer(self, fn, *, once: bool = False) -> bool:
+        """Queue fn on the audio thread when called from the GUI. True = caller returns."""
+        if QThread.currentThread() is not self.thread():
+            return False
+        with self._audio_lock:
+            if once and fn in self._audio_jobs:
+                return True
+            self._audio_jobs.append(fn)
+            if self._audio_thread is None or not self._audio_thread.is_alive():
+                self._audio_thread = threading.Thread(target=self._audio_drain, name="eqfx-audio", daemon=True)
+                self._audio_thread.start()
+        return True
+
+    def _audio_drain(self) -> None:
+        while True:
+            with self._audio_lock:
+                if not self._audio_jobs:
+                    return
+                fn = self._audio_jobs.pop(0)
+            try:
+                fn()
+            except Exception:
+                traceback.print_exc()
 
     def start(self) -> None:
-        self.refresh_devices()
         if self.settings.autostart:
             set_autostart(True)
-        self.engage()
         self._poll.start()
+        # Device setup calls wpctl/pactl. Queue it so the event loop can
+        # answer the tray menu and Show without waiting on WirePlumber.
+        self.refresh_devices()
+        self.engage()
 
     def shutdown(self, restore: bool = True) -> None:
+        self._shutting = True
         self._poll.stop()
+        self._apply_timer.stop()
+        audio = self._audio_thread
+        if audio is not None and audio is not threading.current_thread() and audio.is_alive():
+            audio.join(timeout=1.5)
         if self.target:
             self._capture_device_volume(self.target.name)
         self.monitor.stop()
@@ -108,6 +147,8 @@ class Engine(QObject):
         save_settings(self.settings)
 
     def refresh_devices(self) -> None:
+        if self._defer(self.refresh_devices, once=True):
+            return
         invalidate_sink_cache()
         devices = hardware_sinks()
         snapshot = [(d.node_id, d.name, d.description) for d in devices]
@@ -190,6 +231,8 @@ class Engine(QObject):
         self._flush()
 
     def engage(self) -> None:
+        if self._defer(self.engage):
+            return
         target = self._resolve_target()
         if target is None:
             self.monitor.stop()
@@ -223,6 +266,8 @@ class Engine(QObject):
         self.changed.emit()
 
     def _capture_device_volume(self, name: str) -> None:
+        if not self._shutting and self._defer(lambda: self._capture_device_volume(name)):
+            return
         if not self.settings.remember_device_volume or not name:
             return
         volume = get_sink_volume(name)
@@ -257,6 +302,8 @@ class Engine(QObject):
         self.monitor.start(source)
 
     def set_output_device(self, name: str, follow_default: bool) -> None:
+        if self._defer(lambda: self.set_output_device(name, follow_default)):
+            return
         self.settings.follow_default_output = follow_default
         self.settings.output_device = "" if follow_default else name
         wanted = self._resolve_target()
@@ -337,7 +384,9 @@ class Engine(QObject):
         self.load_preset("flat")
 
     def schedule_apply(self) -> None:
-        self._apply_timer.start()
+        # The apply timer lives on the GUI thread. Emit so a refresh running
+        # on the audio thread can ask for it without touching the timer there.
+        self._apply_soon.emit()
 
     def _reclaim_playback(self) -> None:
         if not self.settings.capture_default:
@@ -359,6 +408,8 @@ class Engine(QObject):
         move_app_streams_to_eqfx()
 
     def _flush(self) -> None:
+        if self._defer(self._flush, once=True):
+            return
         if not self._live:
             return
         target_name = self.target.name if self.target else ""
